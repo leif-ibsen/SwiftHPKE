@@ -12,9 +12,9 @@ import BigInt
 ///
 /// There are five different public key types corresponding to the five KEM's
 ///
-/// * P256 - the key is a 65 byte value corresponding to a NIST curve secp256r1 uncompressed public key point
-/// * P384 - the key is a 97 byte value corresponding to a NIST curve secp384r1 uncompressed public key point
-/// * P521 - the key is a 133 byte value corresponding to a NIST curve secp521r1 uncompressed public key point
+/// * P256 - the key is a 65 byte value corresponding to a NIST  secp256r1 uncompressed curve point
+/// * P384 - the key is a 97 byte value corresponding to a NIST secp384r1 uncompressed curve point
+/// * P521 - the key is a 133 byte value corresponding to a NIST secp521r1 uncompressed curve point
 /// * X25519 - the key is a 32 byte value corresponding to a curve X25519 public key
 /// * X448 - the key is a 56 byte value corresponding to a curve X448 public key
 ///
@@ -37,20 +37,20 @@ public struct PublicKey: CustomStringConvertible, Equatable {
         self.kem = kem
         switch self.kem {
         case .P256:
-            guard bytes.count == 65 else {
-                throw HPKEException.publicKeyParameter
-            }
             self.w = try Curve.p256.decodePoint(self.bytes)
+            guard CurveP256().contains(self.w!) && !self.w!.infinity else {
+                throw HPKEException.publicKeyParameter
+            }
         case .P384:
-            guard bytes.count == 97 else {
-                throw HPKEException.publicKeyParameter
-            }
             self.w = try Curve.p384.decodePoint(self.bytes)
-        case .P521:
-            guard bytes.count == 133 else {
+            guard CurveP384().contains(self.w!) && !self.w!.infinity else {
                 throw HPKEException.publicKeyParameter
             }
+        case .P521:
             self.w = try Curve.p521.decodePoint(self.bytes)
+            guard CurveP521().contains(self.w!) && !self.w!.infinity else {
+                throw HPKEException.publicKeyParameter
+            }
         case .X25519:
             guard bytes.count == 32 else {
                 throw HPKEException.publicKeyParameter

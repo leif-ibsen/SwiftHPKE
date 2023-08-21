@@ -8,7 +8,7 @@
 ///
 /// Key Derivation Functions
 ///
-public enum KDF: CustomStringConvertible {
+public enum KDF: CustomStringConvertible, CaseIterable {
     
     /// Textual description of *self*
     public var description: String {

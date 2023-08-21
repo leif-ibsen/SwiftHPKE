@@ -22,10 +22,10 @@ final class HPKEExceptionTest: XCTestCase {
         let keyBytes = Bytes(repeating: 1, count: 16)
         do {
             let _ = try PublicKey(kem: .P256, bytes: keyBytes)
-            XCTFail("Expected publicKeyParameter exceptio")
-        } catch HPKEException.publicKeyParameter {
+            XCTFail("Expected decodePoint exception")
+        } catch HPKEException.decodePoint {
         } catch {
-            XCTFail("Expected publicKeyParameter exception")
+            XCTFail("Expected decodePoint exception")
         }
     }
 
@@ -33,7 +33,7 @@ final class HPKEExceptionTest: XCTestCase {
         let keyBytes = Bytes(repeating: 1, count: 16)
         do {
             let _ = try PrivateKey(kem: .X448, bytes: keyBytes)
-            XCTFail("Expected privateKeyParameter exceptio")
+            XCTFail("Expected privateKeyParameter exception")
         } catch HPKEException.privateKeyParameter {
         } catch {
             XCTFail("Expected privateKeyParameter exception")

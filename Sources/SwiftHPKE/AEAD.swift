@@ -10,7 +10,7 @@ import CryptoKit
 ///
 /// AEAD Encryption Algorithms
 ///
-public enum AEAD: CustomStringConvertible {
+public enum AEAD: CustomStringConvertible, CaseIterable {
 
     /// Textual description of *self*
     public var description: String {

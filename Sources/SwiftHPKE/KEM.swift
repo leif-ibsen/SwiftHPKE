@@ -11,7 +11,7 @@ import BigInt
 ///
 /// Key Encapsulation Mechanisms
 ///
-public enum KEM: CustomStringConvertible {
+public enum KEM: CustomStringConvertible, CaseIterable {
     
     /// Textual description of *self*
     public var description: String {
@@ -99,6 +99,7 @@ struct KEMStructure {
     
     func deriveKeyPair(_ ikm: Bytes) throws -> (pubKey: PublicKey, privKey: PrivateKey) {
         let dkp_prk = self.kdfStructure.labeledExtract([], Bytes("dkp_prk".utf8), ikm)
+        var privKey: PrivateKey
         switch self.kem {
         case .P256:
             var sk = BInt.ZERO
@@ -107,14 +108,12 @@ struct KEMStructure {
                 if counter > 255 {
                     throw HPKEException.derivedKeyError
                 }
-                var bytes =  self.kdfStructure.labeledExpand(dkp_prk, Bytes("candidate".utf8), [Byte(counter & 0xff)], self.Nsk)
+                var bytes = self.kdfStructure.labeledExpand(dkp_prk, Bytes("candidate".utf8), [Byte(counter & 0xff)], self.Nsk)
                 bytes[0] &= self.bitmask
                 sk = BInt(magnitude: bytes)
                 counter += 1
             }
-            let privKey = try PrivateKey(kem: .P256, bytes: sk.asMagnitudeBytes())
-            let pubKey = try PublicKey(kem: .P256, bytes: Curve.p256.encodePoint(Curve.p256.multiplyG(BInt(magnitude: sk.asMagnitudeBytes())), false))
-            return (pubKey, privKey)
+            privKey = try PrivateKey(kem: .P256, bytes: sk.asMagnitudeBytes())
         case .P384:
             var sk = BInt.ZERO
             var counter = 0
@@ -122,14 +121,12 @@ struct KEMStructure {
                 if counter > 255 {
                     throw HPKEException.derivedKeyError
                 }
-                var bytes =  self.kdfStructure.labeledExpand(dkp_prk, Bytes("candidate".utf8), [Byte(counter & 0xff)], self.Nsk)
+                var bytes = self.kdfStructure.labeledExpand(dkp_prk, Bytes("candidate".utf8), [Byte(counter & 0xff)], self.Nsk)
                 bytes[0] &= self.bitmask
                 sk = BInt(magnitude: bytes)
                 counter += 1
             }
-            let privKey = try PrivateKey(kem: .P384, bytes: sk.asMagnitudeBytes())
-            let pubKey = try PublicKey(kem: .P384, bytes: Curve.p384.encodePoint(Curve.p384.multiplyG(BInt(magnitude: sk.asMagnitudeBytes())), false))
-            return (pubKey, privKey)
+            privKey = try PrivateKey(kem: .P384, bytes: sk.asMagnitudeBytes())
         case .P521:
             var sk = BInt.ZERO
             var counter = 0
@@ -137,21 +134,20 @@ struct KEMStructure {
                 if counter > 255 {
                     throw HPKEException.derivedKeyError
                 }
-                var bytes =  self.kdfStructure.labeledExpand(dkp_prk, Bytes("candidate".utf8), [Byte(counter & 0xff)], self.Nsk)
+                var bytes = self.kdfStructure.labeledExpand(dkp_prk, Bytes("candidate".utf8), [Byte(counter & 0xff)], self.Nsk)
                 bytes[0] &= self.bitmask
                 sk = BInt(magnitude: bytes)
                 counter += 1
             }
-            let privKey = try PrivateKey(kem: .P521, bytes: sk.asMagnitudeBytes())
-            let pubKey = try PublicKey(kem: self.kem, bytes: Curve.p521.encodePoint(Curve.p521.multiplyG(BInt(magnitude: sk.asMagnitudeBytes())), false))
-            return (pubKey, privKey)
+            privKey = try PrivateKey(kem: .P521, bytes: sk.asMagnitudeBytes())
         case .X25519:
             let sk = self.kdfStructure.labeledExpand(dkp_prk, Bytes("sk".utf8), [], self.Nsk)
-            return try (PublicKey(kem: .X25519, bytes: Curve.x25519.X25519(sk, Curve25519._9)), PrivateKey(kem: .X25519, bytes: sk))
+            privKey = try PrivateKey(kem: .X25519, bytes: sk)
         case .X448:
             let sk = self.kdfStructure.labeledExpand(dkp_prk, Bytes("sk".utf8), [], self.Nsk)
-            return try (PublicKey(kem: .X448, bytes: Curve.x448.X448(sk, Curve448._5)), PrivateKey(kem: .X448, bytes: sk))
+            privKey = try PrivateKey(kem: .X448, bytes: sk)
         }
+        return (privKey.publicKey, privKey)
     }
     
     func generateKeyPair(_ ikm: Bytes) throws  -> (pubKey: PublicKey, privKey: PrivateKey) {

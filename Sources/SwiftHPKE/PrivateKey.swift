@@ -32,61 +32,50 @@ public struct PrivateKey: CustomStringConvertible, Equatable {
     ///   - bytes: The key bytes
     /// - Throws: An exception if *bytes* has wrong size for the key type
     public init(kem: KEM, bytes: Bytes) throws {
-        var x = bytes
         self.kem = kem
         switch self.kem {
         case .P256:
-            guard bytes.count <= 32 else {
+            self.s = BInt(magnitude: bytes).mod(CurveP256.order)
+            guard self.s! > BInt.ZERO else {
                 throw HPKEException.privateKeyParameter
             }
-            while x.count < 32 {
-                x.insert(0, at: 0)
-            }
-            self.bytes = x
-            self.s = BInt(magnitude: x)
-            let curve = Curve.p256
-            self.publicKey = try PublicKey(kem: self.kem, bytes: curve.encodePoint(curve.multiplyG(self.s!), false))
+            self.bytes = PrivateKey.int2bytes(self.s!, 32)
+            self.publicKey = try PublicKey(kem: .P256, bytes: Curve.p256.encodePoint(Curve.p256.multiplyG(self.s!), false))
         case .P384:
-            guard bytes.count <= 48 else {
+            self.s = BInt(magnitude: bytes).mod(CurveP384.order)
+            guard self.s! > BInt.ZERO else {
                 throw HPKEException.privateKeyParameter
             }
-            while x.count < 48 {
-                x.insert(0, at: 0)
-            }
-            self.bytes = x
-            self.s = BInt(magnitude: x)
-            let curve = Curve.p384
-            self.publicKey = try PublicKey(kem: self.kem, bytes: curve.encodePoint(curve.multiplyG(self.s!), false))
+            self.bytes = PrivateKey.int2bytes(self.s!, 48)
+            self.publicKey = try PublicKey(kem: .P384, bytes: Curve.p384.encodePoint(Curve.p384.multiplyG(self.s!), false))
         case .P521:
-            guard bytes.count <= 66 else {
+            self.s = BInt(magnitude: bytes).mod(CurveP521.order)
+            guard self.s! > BInt.ZERO else {
                 throw HPKEException.privateKeyParameter
             }
-            while x.count < 66 {
-                x.insert(0, at: 0)
-            }
-            self.bytes = x
-            self.s = BInt(magnitude: x)
-            let curve = Curve.p521
-            self.publicKey = try PublicKey(kem: self.kem, bytes: curve.encodePoint(curve.multiplyG(self.s!), false))
+            self.bytes = PrivateKey.int2bytes(self.s!, 66)
+            self.publicKey = try PublicKey(kem: .P521, bytes: Curve.p521.encodePoint(Curve.p521.multiplyG(self.s!), false))
         case .X25519:
             guard bytes.count == 32 else {
                 throw HPKEException.privateKeyParameter
             }
+            var x = bytes
             x[0] &= 0xf8
             x[31] &= 0x7f
             x[31] |= 0x40
             self.bytes = x
             self.s = nil
-            self.publicKey = try PublicKey(kem: self.kem, bytes: Curve.x25519.X25519(self.bytes, Curve25519._9))
+            self.publicKey = try PublicKey(kem: .X25519, bytes: Curve.x25519.X25519(self.bytes, Curve25519._9))
         case .X448:
             guard bytes.count == 56 else {
                 throw HPKEException.privateKeyParameter
             }
+            var x = bytes
             x[0] &= 0xfc
             x[55] |= 0x80
             self.bytes = x
             self.s = nil
-            self.publicKey = try PublicKey(kem: self.kem, bytes: Curve.x448.X448(self.bytes, Curve448._5))
+            self.publicKey = try PublicKey(kem: .X448, bytes: Curve.x448.X448(self.bytes, Curve448._5))
         }
     }
 
@@ -246,6 +235,14 @@ public struct PrivateKey: CustomStringConvertible, Equatable {
         return key1.kem == key2.kem && key1.bytes == key2.bytes
     }
 
+
+    static func int2bytes(_ x: BInt, _ n: Int) -> Bytes {
+        var bytes = x.asMagnitudeBytes()
+        while bytes.count < n {
+            bytes.insert(0, at: 0)
+        }
+        return bytes
+    }
 
     func bytes2bits(_ bytes: Bytes) -> ASN1BitString {
         do {
