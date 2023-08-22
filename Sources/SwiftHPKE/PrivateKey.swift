@@ -143,7 +143,10 @@ public struct PrivateKey: CustomStringConvertible, Equatable {
             }
             try self.init(kem: kem, bytes: os.value)
         } else {
-            try self.init(kem: kem, bytes: seq2.value)
+            guard let seq3 = try ASN1.build(seq2.value) as? ASN1OctetString else {
+                throw HPKEException.asn1Structure
+            }
+            try self.init(kem: kem, bytes: seq3.value)
         }
     }
     
@@ -207,12 +210,12 @@ public struct PrivateKey: CustomStringConvertible, Equatable {
             return ASN1Sequence()
                 .add(ASN1.ZERO)
                 .add(ASN1Sequence().add(Curve25519.OID))
-                .add(ASN1OctetString(self.bytes))
+                .add(ASN1OctetString(ASN1OctetString(self.bytes).encode()))
         case .X448:
             return ASN1Sequence()
                 .add(ASN1.ZERO)
                 .add(ASN1Sequence().add(Curve448.OID))
-                .add(ASN1OctetString(self.bytes))
+                .add(ASN1OctetString(ASN1OctetString(self.bytes).encode()))
         }
     } } }
     /// The DER encoding of *self*

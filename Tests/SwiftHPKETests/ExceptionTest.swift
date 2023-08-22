@@ -10,14 +10,6 @@ import XCTest
 
 final class HPKEExceptionTest: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     func testPublicKeySize() throws {
         let keyBytes = Bytes(repeating: 1, count: 16)
         do {
@@ -125,4 +117,28 @@ final class HPKEExceptionTest: XCTestCase {
         try doTestExportSize(.KDF512, 64)
     }
 
+    // Testdata from project Wycheproof
+    func testSmallOrder() throws {
+        let pubPem =
+"""
+-----BEGIN PUBLIC KEY-----
+MEIwBQYDK2VvAzkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+-----END PUBLIC KEY-----
+"""
+        let privPem =
+"""
+-----BEGIN PRIVATE KEY-----
+MEYCAQAwBQYDK2VvBDoEOATwRjjVZb6oOsN3A1ENZHVo26xYIYgTdIoidJQDjyu4\nEdR4BbzfBKKsWFrafy8jOJv9Rlj53dTe
+-----END PRIVATE KEY-----
+"""
+        do {
+            let pub = try PublicKey(pem: pubPem)
+            let priv = try PrivateKey(pem: privPem)
+            let _ = try Curve448().X448(priv.bytes, pub.bytes)
+            XCTFail("Expected smallOrder exception")
+        } catch HPKEException.smallOrder {
+        } catch {
+            XCTFail("Expected smallOrder exception")
+        }
+    }
 }
