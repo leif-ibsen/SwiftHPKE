@@ -7,14 +7,14 @@
 
 import ASN1
 
-class Curve25519 {
+struct Curve25519 {
     
     static let OID = ASN1ObjectIdentifier("1.3.101.110")!
 
     static let _9: Bytes = [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     // RFC 7748 page 9
-    func X25519(_ k: Bytes, _ u: Bytes) throws -> Bytes {
+    static func X25519(_ k: Bytes, _ u: Bytes) throws -> Bytes {
         assert(k.count == 32 && u.count == 32)
         let a24 = Field25519(121665, 0, 0, 0, 0)
         var k1 = k
@@ -64,16 +64,11 @@ class Curve25519 {
         return x2bytes
     }
 
-    func cswap(_ swap: Bool, _ x: inout Field25519, _ y: inout Field25519) {
-        let X = x
-        let Y = y
-        if swap {
-            x = Y
-            y = X
-        } else {
-            x = X
-            y = Y
-        }
+    static func cswap(_ swap: Bool, _ x: inout Field25519, _ y: inout Field25519) {
+        let X = swap ? y : x
+        let Y = swap ? x : y
+        x = X
+        y = Y
     }
 
 }

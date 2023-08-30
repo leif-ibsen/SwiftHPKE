@@ -65,7 +65,7 @@ public struct PrivateKey: CustomStringConvertible, Equatable {
             x[31] |= 0x40
             self.bytes = x
             self.s = nil
-            self.publicKey = try PublicKey(kem: .X25519, bytes: Curve.x25519.X25519(self.bytes, Curve25519._9))
+            self.publicKey = try PublicKey(kem: .X25519, bytes: Curve25519.X25519(self.bytes, Curve25519._9))
         case .X448:
             guard bytes.count == 56 else {
                 throw HPKEException.privateKeyParameter
@@ -75,7 +75,7 @@ public struct PrivateKey: CustomStringConvertible, Equatable {
             x[55] |= 0x80
             self.bytes = x
             self.s = nil
-            self.publicKey = try PublicKey(kem: .X448, bytes: Curve.x448.X448(self.bytes, Curve448._5))
+            self.publicKey = try PublicKey(kem: .X448, bytes: Curve448.X448(self.bytes, Curve448._5))
         }
     }
 

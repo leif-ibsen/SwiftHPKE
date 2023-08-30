@@ -64,8 +64,6 @@ class Curve {
     static let p256 = CurveP256()
     static let p384 = CurveP384()
     static let p521 = CurveP521()
-    static let x25519 = Curve25519()
-    static let x448 = Curve448()
 
     static let OID_P = ASN1ObjectIdentifier("1.2.840.10045.1.1")!
     static let OID_EC = ASN1ObjectIdentifier("1.2.840.10045.2.1")!

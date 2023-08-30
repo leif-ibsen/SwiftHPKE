@@ -38,17 +38,17 @@ public struct PublicKey: CustomStringConvertible, Equatable {
         switch self.kem {
         case .P256:
             self.w = try Curve.p256.decodePoint(self.bytes)
-            guard CurveP256().contains(self.w!) && !self.w!.infinity else {
+            guard Curve.p256.contains(self.w!) && !self.w!.infinity else {
                 throw HPKEException.publicKeyParameter
             }
         case .P384:
             self.w = try Curve.p384.decodePoint(self.bytes)
-            guard CurveP384().contains(self.w!) && !self.w!.infinity else {
+            guard Curve.p384.contains(self.w!) && !self.w!.infinity else {
                 throw HPKEException.publicKeyParameter
             }
         case .P521:
             self.w = try Curve.p521.decodePoint(self.bytes)
-            guard CurveP521().contains(self.w!) && !self.w!.infinity else {
+            guard Curve.p521.contains(self.w!) && !self.w!.infinity else {
                 throw HPKEException.publicKeyParameter
             }
         case .X25519:

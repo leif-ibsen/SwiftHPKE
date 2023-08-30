@@ -11,14 +11,6 @@ import BigInt
 
 final class KeysTest: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     func doTestDER(_ kem: KEM) throws {
         let suite = CipherSuite(kem: kem, kdf: .KDF256, aead: .AESGCM128)
         let (pubKey, privKey) = try suite.makeKeyPair()

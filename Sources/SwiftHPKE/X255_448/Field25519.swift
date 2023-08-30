@@ -42,7 +42,12 @@ struct Field25519: CustomStringConvertible {
     }
 
     var description: String {
-        return String(l0, radix: 16) + " " + String(l1, radix: 16) + " " + String(l2, radix: 16) + " " + String(l3, radix: 16) + " " + String(l4, radix: 16)
+        return
+            String(self.l0, radix: 16) + " " +
+            String(self.l1, radix: 16) + " " +
+            String(self.l2, radix: 16) + " " +
+            String(self.l3, radix: 16) + " " +
+            String(self.l4, radix: 16)
     }
 
     var bytes: Bytes {

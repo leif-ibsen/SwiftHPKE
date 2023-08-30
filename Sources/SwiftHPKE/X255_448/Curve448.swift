@@ -7,7 +7,7 @@
 
 import ASN1
 
-class Curve448 {
+struct Curve448 {
     
     static let OID = ASN1ObjectIdentifier("1.3.101.111")!
 
@@ -15,7 +15,7 @@ class Curve448 {
                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     // RFC 7748 page 9
-    func X448(_ k: Bytes, _ u: Bytes) throws -> Bytes {
+    static func X448(_ k: Bytes, _ u: Bytes) throws -> Bytes {
         assert(k.count == 56 && u.count == 56)
         var k1 = k
         k1[0] &= 0xfc
@@ -50,8 +50,7 @@ class Curve448 {
         cswap(swap, &z2, &z3)
         z2 = z2.invert()
         x2 = x2.mul(z2)
-        var x2bytes = x2.bytes
-        x2bytes.reverse()
+        let x2bytes = x2.bytes
         var zz = Byte(0)
         for i in 0 ..< x2bytes.count {
             zz |= x2bytes[i]
@@ -62,16 +61,11 @@ class Curve448 {
         return x2bytes
     }
 
-    func cswap(_ swap: Bool, _ x: inout Field448, _ y: inout Field448) {
-        let X = x
-        let Y = y
-        if swap {
-            x = Y
-            y = X
-        } else {
-            x = X
-            y = Y
-        }
+    static func cswap(_ swap: Bool, _ x: inout Field448, _ y: inout Field448) {
+        let X = swap ? y : x
+        let Y = swap ? x : y
+        x = X
+        y = Y
     }
 
 }

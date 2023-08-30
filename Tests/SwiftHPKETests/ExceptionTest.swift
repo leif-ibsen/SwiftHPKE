@@ -134,7 +134,7 @@ MEYCAQAwBQYDK2VvBDoEOATwRjjVZb6oOsN3A1ENZHVo26xYIYgTdIoidJQDjyu4\nEdR4BbzfBKKsWF
         do {
             let pub = try PublicKey(pem: pubPem)
             let priv = try PrivateKey(pem: privPem)
-            let _ = try Curve448().X448(priv.bytes, pub.bytes)
+            let _ = try Curve448.X448(priv.bytes, pub.bytes)
             XCTFail("Expected smallOrder exception")
         } catch HPKEException.smallOrder {
         } catch {

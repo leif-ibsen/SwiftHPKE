@@ -16,10 +16,9 @@ struct UInt128 {
     }
 
     mutating func add(_ x: (high: Limb, low: Limb)) {
-        let a = x.low
         self.low &+= x.low
         self.high &+= x.high
-        if self.low < a {
+        if self.low < x.low {
             self.high &+= 1
         }
     }

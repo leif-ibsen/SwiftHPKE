@@ -173,9 +173,9 @@ struct KEMStructure {
             let Z = Curve.p521.multiply(pk.w!, sk.s!)
             return Curve.p521.align(Z.x.asMagnitudeBytes())
         case .X25519:
-            return try Curve.x25519.X25519(sk.bytes, pk.bytes)
+            return try Curve25519.X25519(sk.bytes, pk.bytes)
         case .X448:
-            return try Curve.x448.X448(sk.bytes, pk.bytes)
+            return try Curve448.X448(sk.bytes, pk.bytes)
         }
     }
 

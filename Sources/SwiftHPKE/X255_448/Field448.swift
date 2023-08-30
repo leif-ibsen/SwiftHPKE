@@ -33,8 +33,8 @@ struct Field448: CustomStringConvertible {
     
     var description: String {
         var s = ""
-        for i in (0 ..< self.l.count).reversed() {
-            s = s + String(self.l[i], radix: 16) + " "
+        for i in 0 ..< self.l.count {
+            s += (i > 0 ? " " : "") + String(self.l[i], radix: 16)
         }
         return s
     }
@@ -67,7 +67,6 @@ struct Field448: CustomStringConvertible {
         for i in 0 ..< 56 {
             b[i] = Byte((x.l[i / 7] >> ((i % 7) << 3)) & 0xff)
         }
-        b.reverse()
         return b
     }
 
@@ -92,16 +91,17 @@ struct Field448: CustomStringConvertible {
         return x
     }
     
+    // Add 2 * feP to avoid negative values
     func sub(_ a: Field448) -> Field448 {
         var x = self
-        x.l[0] &+= (0xffffffffffffff &- a.l[0])
-        x.l[1] &+= (0xffffffffffffff &- a.l[1])
-        x.l[2] &+= (0xffffffffffffff &- a.l[2])
-        x.l[3] &+= (0xffffffffffffff &- a.l[3])
-        x.l[4] &+= (0xfffffffffffffe &- a.l[4])
-        x.l[5] &+= (0xffffffffffffff &- a.l[5])
-        x.l[6] &+= (0xffffffffffffff &- a.l[6])
-        x.l[7] &+= (0xffffffffffffff &- a.l[7])
+        x.l[0] &+= (0x1fffffffffffffe &- a.l[0])
+        x.l[1] &+= (0x1fffffffffffffe &- a.l[1])
+        x.l[2] &+= (0x1fffffffffffffe &- a.l[2])
+        x.l[3] &+= (0x1fffffffffffffe &- a.l[3])
+        x.l[4] &+= (0x1fffffffffffffc &- a.l[4])
+        x.l[5] &+= (0x1fffffffffffffe &- a.l[5])
+        x.l[6] &+= (0x1fffffffffffffe &- a.l[6])
+        x.l[7] &+= (0x1fffffffffffffe &- a.l[7])
         x.reduce()
         return x
     }

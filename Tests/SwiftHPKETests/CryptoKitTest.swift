@@ -11,14 +11,6 @@ import CryptoKit
 
 final class CryptoKitTest: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     func testKeysP256() throws {
         let ckPrivKey = CryptoKit.P256.KeyAgreement.PrivateKey()
         let ckPrivKeyDer = Bytes(ckPrivKey.derRepresentation)
