@@ -84,9 +84,14 @@ struct Field448: CustomStringConvertible {
         
     func add(_ a: Field448) -> Field448 {
         var x = self
-        for i in 0 ..< 8 {
-            x.l[i] &+= a.l[i]
-        }
+        x.l[0] &+= a.l[0]
+        x.l[1] &+= a.l[1]
+        x.l[2] &+= a.l[2]
+        x.l[3] &+= a.l[3]
+        x.l[4] &+= a.l[4]
+        x.l[5] &+= a.l[5]
+        x.l[6] &+= a.l[6]
+        x.l[7] &+= a.l[7]
         x.reduce()
         return x
     }

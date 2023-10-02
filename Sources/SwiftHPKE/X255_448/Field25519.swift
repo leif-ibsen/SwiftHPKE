@@ -140,23 +140,23 @@ struct Field25519: CustomStringConvertible {
     }
 
     func add(_ x: Field25519) -> Field25519 {
-        var v = Field25519(
-            self.l0 + x.l0,
-            self.l1 + x.l1,
-            self.l2 + x.l2,
-            self.l3 + x.l3,
-            self.l4 + x.l4)
+        var v = self
+        v.l0 += x.l0
+        v.l1 += x.l1
+        v.l2 += x.l2
+        v.l3 += x.l3
+        v.l4 += x.l4
         v.carryPropagate()
         return v
     }
 
     func sub(_ x: Field25519) -> Field25519 {
-        var v = Field25519(
-            (self.l0 + 0xfffffffffffda) - x.l0,
-            (self.l1 + 0xffffffffffffe) - x.l1,
-            (self.l2 + 0xffffffffffffe) - x.l2,
-            (self.l3 + 0xffffffffffffe) - x.l3,
-            (self.l4 + 0xffffffffffffe) - x.l4)
+        var v = self
+        v.l0 += 0xfffffffffffda - x.l0
+        v.l1 += 0xffffffffffffe - x.l1
+        v.l2 += 0xffffffffffffe - x.l2
+        v.l3 += 0xffffffffffffe - x.l3
+        v.l4 += 0xffffffffffffe - x.l4
         v.carryPropagate()
         return v
     }

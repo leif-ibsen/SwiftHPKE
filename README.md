@@ -8,6 +8,7 @@
 <li><a href="#basic6">Encryption and Decryption</a></li>
 <li><a href="#basic7">Secret Export</a></li>
 <li><a href="#basic8">CryptoKit Compatibility</a></li>
+<li><a href="#basic9">Performance</a></li>
 <li><a href="#dep">Dependencies</a></li>
 <li><a href="#ref">References</a></li>
 </ul>
@@ -16,7 +17,7 @@ SwiftHPKE implements the Hybrid Public Key Encryption standard as defined in RFC
 In your project Package.swift file add a dependency like<br/>
 
 	  dependencies: [
-	  .package(url: "https://github.com/leif-ibsen/SwiftHPKE", from: "1.3.0"),
+	  .package(url: "https://github.com/leif-ibsen/SwiftHPKE", from: "1.4.0"),
 	  ]
 SwiftHPKE requires Swift 5.0. It also requires that the Int and UInt types be 64 bit types.
 SwiftHPKE uses Apple's CryptoKit framework. Therefore, for macOS the version must be at least 10.15,
@@ -246,33 +247,51 @@ is also possible.
 The SwiftHPKE keys of type .P256, .P384, .P521 and .X25519 are equivalent to
 CryptoKit keys of type P256, P384, P521 and Curve25519. Keys of type .X448 is not supported in CryptoKit.
 
-To convert CryptoKit P256 keys (similarly for P384 and P521) - say *cc256priv* and *cc256pub*:
+To convert CryptoKit P256 keys (similarly for P384 and P521) - say *ckPriv* and *ckPub* to SwiftHPKE keys:
 
-    let hpke256priv = try PrivateKey(der: Bytes(cc256priv.derRepresentation))
-    let hpke256pub = try PublicKey(der: Bytes(cc256pub.derRepresentation))
+    let hpkePriv = try PrivateKey(der: Bytes(ckPriv.derRepresentation))
+    let hpkePub = try PublicKey(der: Bytes(ckPub.derRepresentation))
 
-To convert CryptoKit Curve25519 keys - say *cc25519priv* and *cc25519pub*:
+To convert CryptoKit Curve25519 keys - say *ckPriv* and *ckPub* to SwiftHPKE keys:
 
-    let hpke25519priv = try PrivateKey(kem: .X25519, bytes: Bytes(cc25519priv.rawRepresentation))
-    let hpke25519pub = try PublicKey(kem: .X25519, bytes: Bytes(cc25519pub.rawRepresentation))
+    let hpkePriv = try PrivateKey(kem: .X25519, bytes: Bytes(ckPriv.rawRepresentation))
+    let hpkePub = try PublicKey(kem: .X25519, bytes: Bytes(ckPub.rawRepresentation))
 
-To convert SwiftHPKE .P256 keys (similarly for .P384 and .P521) - say *hpke256priv* and *hpke256pub*:
+To convert SwiftHPKE .P256 keys (similarly for .P384 and .P521) - say *hpkePriv* and *hpkePub* to CryptoKit keys:
 
-    let cc256priv = try CryptoKit.P256.KeyAgreement.PrivateKey(derRepresentation: hpke256priv.der)
-    let cc256pub = try CryptoKit.P256.KeyAgreement.PublicKey(derRepresentation: hpke256pub.der)
+    let ckPriv = try CryptoKit.P256.KeyAgreement.PrivateKey(derRepresentation: hpkePriv.der)
+    let ckPub = try CryptoKit.P256.KeyAgreement.PublicKey(derRepresentation: hpkePub.der)
 
-To convert SwiftHPKE .X25519 keys - say *hpke25519priv* and *hpke25519pub*:
+To convert SwiftHPKE .X25519 keys - say *hpkePriv* and *hpkePub* to CryptoKit keys:
 
-    let cc25519priv = try CryptoKit.Curve25519.KeyAgreement.PrivateKey(rawRepresentation: hpke25519priv.bytes)
-    let cc25519pub = try CryptoKit.Curve25519.KeyAgreement.PublicKey(rawRepresentation: hpke25519pub.bytes)
+    let ckPriv = try CryptoKit.Curve25519.KeyAgreement.PrivateKey(rawRepresentation: hpkePriv.bytes)
+    let ckPub = try CryptoKit.Curve25519.KeyAgreement.PublicKey(rawRepresentation: hpkePub.bytes)
+
+<h2 id="basic9"><b>Performance</b></h2>
+SwiftHPKE's encryption and decryption performance was measured on an iMac 2021, Apple M1 chip.
+The time to create a *Sender* and *Recipient* instance in base mode is shown in the table below, depending on the KEM type - units are milliseconds.
+<table width="90%">
+<tr><th align="left" width="16%">KEM</th><th align="right" width="28%">Sender</th><th align="right" width="28%">Recipient</th></tr>
+<tr><td>P256</td><td align="right">7 mSec</td><td align="right">6 mSec</td></tr>
+<tr><td>P384</td><td align="right">20 mSec</td><td align="right">17 mSec</td></tr>
+<tr><td>P521</td><td align="right">46 mSec</td><td align="right">39 mSec</td></tr>
+<tr><td>X25519</td><td align="right">0.14 mSec</td><td align="right">0.09 mSec</td></tr>
+<tr><td>X448</td><td align="right">1.1 mSec</td><td align="right">0.5 mSec</td></tr>
+</table>
+The encryption and decryption speed in base mode, once the *Sender* or *Recipient* instance is created, is shown in the table below, depending on the AEAD type - units are MBytes / Sec.
+<table width="90%">
+<tr><th align="left" width="16%">AEAD</th><th align="right" width="28%">Encryption speed</th><th align="right" width="28%">Decryption speed</th></tr>
+<tr><td>AESGCM128</td><td align="right">3500 MB/Sec (0.91 cycles / byte)</td><td align="right">3340 MB/Sec (0.96 cycles / byte)</td></tr>
+<tr><td>AESGCM256</td><td align="right">3640 MB/Sec (0.88 cycles / byte)</td><td align="right">3630 MB/Sec (0.88 cycles / byte)</td></tr>
+<tr><td>CHACHAPOLY</td><td align="right">555 MB/Sec (5.8 cycles / byte)</td><td align="right">557 MB/Sec (5.7 cycles / byte)</td></tr>
+</table>
 
 <h2 id="dep"><b>Dependencies</b></h2>
-
 The SwiftHPKE package depends on the ASN1 and BigInt packages
 
     dependencies: [
         .package(url: "https://github.com/leif-ibsen/ASN1", from: "2.1.0"),
-        .package(url: "https://github.com/leif-ibsen/BigInt", from: "1.13.0"),
+        .package(url: "https://github.com/leif-ibsen/BigInt", from: "1.14.0"),
     ],
 
 <h2 id="ref"><b>References</b></h2>

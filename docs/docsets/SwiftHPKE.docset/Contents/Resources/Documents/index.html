@@ -108,6 +108,7 @@
 <li><a href="#basic6">Encryption and Decryption</a></li>
 <li><a href="#basic7">Secret Export</a></li>
 <li><a href="#basic8">CryptoKit Compatibility</a></li>
+<li><a href="#basic9">Performance</a></li>
 <li><a href="#dep">Dependencies</a></li>
 <li><a href="#ref">References</a></li>
 </ul>
@@ -118,7 +119,7 @@
 
 <p>In your project Package.swift file add a dependency like<br/></p>
 <pre class="highlight plaintext"><code>  dependencies: [
-  .package(url: "https://github.com/leif-ibsen/SwiftHPKE", from: "1.3.0"),
+  .package(url: "https://github.com/leif-ibsen/SwiftHPKE", from: "1.4.0"),
   ]
 </code></pre>
 
@@ -364,32 +365,55 @@ is also possible.</p>
 <p>The SwiftHPKE keys of type .P256, .P384, .P521 and .X25519 are equivalent to
 CryptoKit keys of type P256, P384, P521 and Curve25519. Keys of type .X448 is not supported in CryptoKit.</p>
 
-<p>To convert CryptoKit P256 keys (similarly for P384 and P521) - say <em>cc256priv</em> and <em>cc256pub</em>:</p>
-<pre class="highlight plaintext"><code>let hpke256priv = try PrivateKey(der: Bytes(cc256priv.derRepresentation))
-let hpke256pub = try PublicKey(der: Bytes(cc256pub.derRepresentation))
+<p>To convert CryptoKit P256 keys (similarly for P384 and P521) - say <em>ckPriv</em> and <em>ckPub</em> to SwiftHPKE keys:</p>
+<pre class="highlight plaintext"><code>let hpkePriv = try PrivateKey(der: Bytes(ckPriv.derRepresentation))
+let hpkePub = try PublicKey(der: Bytes(ckPub.derRepresentation))
 </code></pre>
 
-<p>To convert CryptoKit Curve25519 keys - say <em>cc25519priv</em> and <em>cc25519pub</em>:</p>
-<pre class="highlight plaintext"><code>let hpke25519priv = try PrivateKey(kem: .X25519, bytes: Bytes(cc25519priv.rawRepresentation))
-let hpke25519pub = try PublicKey(kem: .X25519, bytes: Bytes(cc25519pub.rawRepresentation))
+<p>To convert CryptoKit Curve25519 keys - say <em>ckPriv</em> and <em>ckPub</em> to SwiftHPKE keys:</p>
+<pre class="highlight plaintext"><code>let hpkePriv = try PrivateKey(kem: .X25519, bytes: Bytes(ckPriv.rawRepresentation))
+let hpkePub = try PublicKey(kem: .X25519, bytes: Bytes(ckPub.rawRepresentation))
 </code></pre>
 
-<p>To convert SwiftHPKE .P256 keys (similarly for .P384 and .P521) - say <em>hpke256priv</em> and <em>hpke256pub</em>:</p>
-<pre class="highlight plaintext"><code>let cc256priv = try CryptoKit.P256.KeyAgreement.PrivateKey(derRepresentation: hpke256priv.der)
-let cc256pub = try CryptoKit.P256.KeyAgreement.PublicKey(derRepresentation: hpke256pub.der)
+<p>To convert SwiftHPKE .P256 keys (similarly for .P384 and .P521) - say <em>hpkePriv</em> and <em>hpkePub</em> to CryptoKit keys:</p>
+<pre class="highlight plaintext"><code>let ckPriv = try CryptoKit.P256.KeyAgreement.PrivateKey(derRepresentation: hpkePriv.der)
+let ckPub = try CryptoKit.P256.KeyAgreement.PublicKey(derRepresentation: hpkePub.der)
 </code></pre>
 
-<p>To convert SwiftHPKE .X25519 keys - say <em>hpke25519priv</em> and <em>hpke25519pub</em>:</p>
-<pre class="highlight plaintext"><code>let cc25519priv = try CryptoKit.Curve25519.KeyAgreement.PrivateKey(rawRepresentation: hpke25519priv.bytes)
-let cc25519pub = try CryptoKit.Curve25519.KeyAgreement.PublicKey(rawRepresentation: hpke25519pub.bytes)
+<p>To convert SwiftHPKE .X25519 keys - say <em>hpkePriv</em> and <em>hpkePub</em> to CryptoKit keys:</p>
+<pre class="highlight plaintext"><code>let ckPriv = try CryptoKit.Curve25519.KeyAgreement.PrivateKey(rawRepresentation: hpkePriv.bytes)
+let ckPub = try CryptoKit.Curve25519.KeyAgreement.PublicKey(rawRepresentation: hpkePub.bytes)
 </code></pre>
+
+<h2 id="basic9"><b>Performance</b></h2>
+
+<p>SwiftHPKE&rsquo;s encryption and decryption performance was measured on an iMac 2021, Apple M1 chip.
+The time to create a <em>Sender</em> and <em>Recipient</em> instance in base mode is shown in the table below, depending on the KEM type - units are milliseconds.</p>
+
+<table width="90%">
+<tr><th align="left" width="16%">KEM</th><th align="right" width="28%">Sender</th><th align="right" width="28%">Recipient</th></tr>
+<tr><td>P256</td><td align="right">7 mSec</td><td align="right">6 mSec</td></tr>
+<tr><td>P384</td><td align="right">20 mSec</td><td align="right">17 mSec</td></tr>
+<tr><td>P521</td><td align="right">46 mSec</td><td align="right">39 mSec</td></tr>
+<tr><td>X25519</td><td align="right">0.14 mSec</td><td align="right">0.09 mSec</td></tr>
+<tr><td>X448</td><td align="right">1.1 mSec</td><td align="right">0.5 mSec</td></tr>
+</table>
+
+<p>The encryption and decryption speed in base mode, once the <em>Sender</em> or <em>Recipient</em> instance is created, is shown in the table below, depending on the AEAD type - units are MBytes / Sec.</p>
+
+<table width="90%">
+<tr><th align="left" width="16%">AEAD</th><th align="right" width="28%">Encryption speed</th><th align="right" width="28%">Decryption speed</th></tr>
+<tr><td>AESGCM128</td><td align="right">3500 MB/Sec (0.91 cycles / byte)</td><td align="right">3340 MB/Sec (0.96 cycles / byte)</td></tr>
+<tr><td>AESGCM256</td><td align="right">3640 MB/Sec (0.88 cycles / byte)</td><td align="right">3630 MB/Sec (0.88 cycles / byte)</td></tr>
+<tr><td>CHACHAPOLY</td><td align="right">555 MB/Sec (5.8 cycles / byte)</td><td align="right">557 MB/Sec (5.7 cycles / byte)</td></tr>
+</table>
 
 <h2 id="dep"><b>Dependencies</b></h2>
 
 <p>The SwiftHPKE package depends on the ASN1 and BigInt packages</p>
 <pre class="highlight plaintext"><code>dependencies: [
     .package(url: "https://github.com/leif-ibsen/ASN1", from: "2.1.0"),
-    .package(url: "https://github.com/leif-ibsen/BigInt", from: "1.13.0"),
+    .package(url: "https://github.com/leif-ibsen/BigInt", from: "1.14.0"),
 ],
 </code></pre>
 
@@ -410,7 +434,7 @@ There are references in the source code where appropriate.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2023-08-30)</p>
+          <p>&copy; 2023 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2023-10-02)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

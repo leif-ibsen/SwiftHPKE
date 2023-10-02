@@ -8,8 +8,6 @@
 import ASN1
 import BigInt
 
-/// A HPKE public key
-///
 /// There are five different public key types corresponding to the five KEM's
 ///
 /// * P256 - the key is a 65 byte value corresponding to a NIST  secp256r1 uncompressed curve point
@@ -26,7 +24,9 @@ public struct PublicKey: CustomStringConvertible, Equatable {
     
     // MARK: Initializers
         
-    /// Creates a PublicKey from its type and key bytes
+    /// Creates a PublicKey from its type and key bytes.<br/>
+    /// For types P256, P384 and P521 the key bytes represents
+    /// either a compressed curve point or an uncompressed curve point.
     ///
     /// - Parameters:
     ///   - kem: The key type

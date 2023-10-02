@@ -10,9 +10,6 @@ public typealias Byte = UInt8
 /// Array of unsigned 8 bit values
 public typealias Bytes = [UInt8]
 
-
-/// A HPKE CipherSuite
-///
 /// A CipherSuite instance combines a *Key Encapsulation Mechanism* (KEM), a *Key Derivation Function* (KDF)
 /// and a *AEAD Encryption Algorithm* (AEAD).
 /// It can encrypt or decrypt a single message in one of four modes:

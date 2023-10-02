@@ -8,8 +8,6 @@
 import ASN1
 import BigInt
 
-/// A HPKE private key
-///
 /// There are five different private key types corresponding to the five KEM's
 ///
 /// * P256 - the key is a 32 byte value corresponding to a NIST curve secp256r1 private key
