@@ -63,36 +63,36 @@ struct KEMStructure {
             let suite_id = Bytes("KEM".utf8) + [0x00, 0x10]
             self.kdfStructure = KDFStructure(.KDF256, suite_id)
             self.Nsecret = 32
-            self.Npk = 65
-            self.Nsk = 32
+            self.Npk = CurveP256.publicKeySize
+            self.Nsk = CurveP256.privateKeySize
             self.bitmask = 0xff
         case .P384:
             let suite_id = Bytes("KEM".utf8) + [0x00, 0x11]
             self.kdfStructure = KDFStructure(.KDF256, suite_id)
             self.Nsecret = 48
-            self.Npk = 97
-            self.Nsk = 48
+            self.Npk = CurveP384.publicKeySize
+            self.Nsk = CurveP384.privateKeySize
             self.bitmask = 0xff
         case .P521:
             let suite_id = Bytes("KEM".utf8) + [0x00, 0x12]
             self.kdfStructure = KDFStructure(.KDF512, suite_id)
             self.Nsecret = 64
-            self.Npk = 133
-            self.Nsk = 66
+            self.Npk = CurveP521.publicKeySize
+            self.Nsk = CurveP521.privateKeySize
             self.bitmask = 0x01
         case .X25519:
             let suite_id = Bytes("KEM".utf8) + [0x00, 0x20]
             self.kdfStructure = KDFStructure(.KDF256, suite_id)
             self.Nsecret = 32
-            self.Npk = 32
-            self.Nsk = 32
+            self.Npk = Curve25519.keySize
+            self.Nsk = Curve25519.keySize
             self.bitmask = 0x00
         case .X448:
             let suite_id = Bytes("KEM".utf8) + [0x00, 0x21]
             self.kdfStructure = KDFStructure(.KDF512, suite_id)
             self.Nsecret = 56
-            self.Npk = 56
-            self.Nsk = 56
+            self.Npk = Curve448.keySize
+            self.Nsk = Curve448.keySize
             self.bitmask = 0x00
         }
     }

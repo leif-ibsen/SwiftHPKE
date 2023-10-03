@@ -37,24 +37,24 @@ public struct PrivateKey: CustomStringConvertible, Equatable {
             guard self.s! > BInt.ZERO else {
                 throw HPKEException.privateKeyParameter
             }
-            self.bytes = PrivateKey.int2bytes(self.s!, 32)
+            self.bytes = PrivateKey.int2bytes(self.s!, CurveP256.privateKeySize)
             self.publicKey = try PublicKey(kem: .P256, bytes: Curve.p256.encodePoint(Curve.p256.multiplyG(self.s!), false))
         case .P384:
             self.s = BInt(magnitude: bytes).mod(CurveP384.order)
             guard self.s! > BInt.ZERO else {
                 throw HPKEException.privateKeyParameter
             }
-            self.bytes = PrivateKey.int2bytes(self.s!, 48)
+            self.bytes = PrivateKey.int2bytes(self.s!, CurveP384.privateKeySize)
             self.publicKey = try PublicKey(kem: .P384, bytes: Curve.p384.encodePoint(Curve.p384.multiplyG(self.s!), false))
         case .P521:
             self.s = BInt(magnitude: bytes).mod(CurveP521.order)
             guard self.s! > BInt.ZERO else {
                 throw HPKEException.privateKeyParameter
             }
-            self.bytes = PrivateKey.int2bytes(self.s!, 66)
+            self.bytes = PrivateKey.int2bytes(self.s!, CurveP521.privateKeySize)
             self.publicKey = try PublicKey(kem: .P521, bytes: Curve.p521.encodePoint(Curve.p521.multiplyG(self.s!), false))
         case .X25519:
-            guard bytes.count == 32 else {
+            guard bytes.count == Curve25519.keySize else {
                 throw HPKEException.privateKeyParameter
             }
             var x = bytes
@@ -65,7 +65,7 @@ public struct PrivateKey: CustomStringConvertible, Equatable {
             self.s = nil
             self.publicKey = try PublicKey(kem: .X25519, bytes: Curve25519.X25519(self.bytes, Curve25519._9))
         case .X448:
-            guard bytes.count == 56 else {
+            guard bytes.count == Curve448.keySize else {
                 throw HPKEException.privateKeyParameter
             }
             var x = bytes

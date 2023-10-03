@@ -9,6 +9,8 @@ import ASN1
 
 struct Curve448 {
     
+    static let keySize = 56
+    
     static let OID = ASN1ObjectIdentifier("1.3.101.111")!
 
     static let _5: Bytes = [5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -16,7 +18,7 @@ struct Curve448 {
 
     // RFC 7748 page 9
     static func X448(_ k: Bytes, _ u: Bytes) throws -> Bytes {
-        assert(k.count == 56 && u.count == 56)
+        assert(k.count == keySize && u.count == keySize)
         var k1 = k
         k1[0] &= 0xfc
         k1[55] |= 0x80

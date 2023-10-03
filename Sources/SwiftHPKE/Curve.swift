@@ -10,6 +10,8 @@ import BigInt
 
 class CurveP256: Curve {
     
+    static let publicKeySize = 65
+    static let privateKeySize = 32
     static let name = "secp256r1"
     static let p = BInt("ffffffff00000001000000000000000000000000ffffffffffffffffffffffff", radix: 16)!
     static let a = BInt("ffffffff00000001000000000000000000000000fffffffffffffffffffffffc", radix: 16)!
@@ -27,6 +29,8 @@ class CurveP256: Curve {
 
 class CurveP384: Curve {
     
+    static let publicKeySize = 97
+    static let privateKeySize = 48
     static let name = "secp384r1"
     static let p = BInt("fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffeffffffff0000000000000000ffffffff", radix: 16)!
     static let a = BInt("fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffeffffffff0000000000000000fffffffc", radix: 16)!
@@ -44,6 +48,8 @@ class CurveP384: Curve {
 
 class CurveP521: Curve {
     
+    static let publicKeySize = 133
+    static let privateKeySize = 66
     static let name = "secp521r1"
     static let p = BInt("1ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", radix: 16)!
     static let a = BInt("1fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc", radix: 16)!

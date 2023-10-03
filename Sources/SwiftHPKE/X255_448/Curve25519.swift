@@ -9,13 +9,15 @@ import ASN1
 
 struct Curve25519 {
     
+    static let keySize = 32
+
     static let OID = ASN1ObjectIdentifier("1.3.101.110")!
 
     static let _9: Bytes = [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     // RFC 7748 page 9
     static func X25519(_ k: Bytes, _ u: Bytes) throws -> Bytes {
-        assert(k.count == 32 && u.count == 32)
+        assert(k.count == keySize && u.count == keySize)
         let a24 = Field25519(121665, 0, 0, 0, 0)
         var k1 = k
         k1[0] &= 0xf8

@@ -77,67 +77,97 @@ final class KeysTest: XCTestCase {
 
     func testPub() throws {
 
-        // Curve point = Generator point
+        // Curve point = Generator point * 10
         do {
-            let _ = try PublicKey(kem: .P256, bytes: CurveP256().encodePoint(Point(CurveP256.gx, CurveP256.gy), false))
+            let curvePoint = Curve.p256.multiply(Point(CurveP256.gx, CurveP256.gy), BInt.TEN)
+            let pubKey1 = try PublicKey(kem: .P256, bytes: Curve.p256.encodePoint(curvePoint, false))
+            let pubKey2 = try PublicKey(kem: .P256, bytes: Curve.p256.encodePoint(curvePoint, true))
+            XCTAssertEqual(pubKey1, pubKey2)
         } catch {
             XCTFail("Did not expect exception")
         }
         do {
-            let _ = try PublicKey(kem: .P384, bytes: CurveP384().encodePoint(Point(CurveP384.gx, CurveP384.gy), false))
+            let curvePoint = Curve.p384.multiply(Point(CurveP384.gx, CurveP384.gy), BInt.TEN)
+            let pubKey1 = try PublicKey(kem: .P384, bytes: Curve.p384.encodePoint(curvePoint, false))
+            let pubKey2 = try PublicKey(kem: .P384, bytes: Curve.p384.encodePoint(curvePoint, true))
+            XCTAssertEqual(pubKey1, pubKey2)
         } catch {
             XCTFail("Did not expect exception")
         }
         do {
-            let _ = try PublicKey(kem: .P521, bytes: CurveP521().encodePoint(Point(CurveP521.gx, CurveP521.gy), false))
+            let curvePoint = Curve.p521.multiply(Point(CurveP521.gx, CurveP521.gy), BInt.TEN)
+            let pubKey1 = try PublicKey(kem: .P521, bytes: Curve.p521.encodePoint(curvePoint, false))
+            let pubKey2 = try PublicKey(kem: .P521, bytes: Curve.p521.encodePoint(curvePoint, true))
+            XCTAssertEqual(pubKey1, pubKey2)
         } catch {
             XCTFail("Did not expect exception")
         }
 
         // Curve point = INFINITY
         do {
-            let _ = try PublicKey(kem: .P256, bytes: CurveP256().encodePoint(Point.INFINITY, false))
+            let _ = try PublicKey(kem: .P256, bytes: Curve.p256.encodePoint(Point.INFINITY, false))
             XCTFail("Expected publicKeyParameter exception")
         } catch HPKEException.publicKeyParameter {
         } catch {
             XCTFail("Expected publicKeyParameter exception")
         }
         do {
-            let _ = try PublicKey(kem: .P384, bytes: CurveP384().encodePoint(Point.INFINITY, false))
+            let _ = try PublicKey(kem: .P384, bytes: Curve.p384.encodePoint(Point.INFINITY, false))
             XCTFail("Expected publicKeyParameter exception")
         } catch HPKEException.publicKeyParameter {
         } catch {
             XCTFail("Expected publicKeyParameter exception")
         }
         do {
-            let _ = try PublicKey(kem: .P521, bytes: CurveP521().encodePoint(Point.INFINITY, false))
+            let _ = try PublicKey(kem: .P521, bytes: Curve.p521.encodePoint(Point.INFINITY, false))
             XCTFail("Expected publicKeyParameter exception")
         } catch HPKEException.publicKeyParameter {
         } catch {
             XCTFail("Expected publicKeyParameter exception")
         }
 
-        // Curve point = (0, 0)
+        // Curve point not on curve
         do {
-            let _ = try PublicKey(kem: .P256, bytes: CurveP256().encodePoint(Point(BInt.ZERO, BInt.ZERO), false))
+            let curvePoint = Point(CurveP256.gx, BInt.ZERO)
+            let _ = try PublicKey(kem: .P256, bytes: Curve.p256.encodePoint(curvePoint, false))
             XCTFail("Expected publicKeyParameter exception")
         } catch HPKEException.publicKeyParameter {
         } catch {
             XCTFail("Expected publicKeyParameter exception")
         }
         do {
-            let _ = try PublicKey(kem: .P384, bytes: CurveP384().encodePoint(Point(BInt.ZERO, BInt.ZERO), false))
+            let curvePoint = Point(CurveP384.gx, BInt.ZERO)
+            let _ = try PublicKey(kem: .P384, bytes: Curve.p384.encodePoint(curvePoint, false))
             XCTFail("Expected publicKeyParameter exception")
         } catch HPKEException.publicKeyParameter {
         } catch {
             XCTFail("Expected publicKeyParameter exception")
         }
         do {
-            let _ = try PublicKey(kem: .P521, bytes: CurveP521().encodePoint(Point(BInt.ZERO, BInt.ZERO), false))
+            let curvePoint = Point(CurveP521.gx, BInt.ZERO)
+            let _ = try PublicKey(kem: .P521, bytes: Curve.p521.encodePoint(curvePoint, false))
             XCTFail("Expected publicKeyParameter exception")
         } catch HPKEException.publicKeyParameter {
         } catch {
             XCTFail("Expected publicKeyParameter exception")
+        }
+        do {
+            let curvePoint = Point(CurveP256.gx, BInt.ZERO)
+            let _ = try PublicKey(kem: .P256, bytes: Curve.p256.encodePoint(curvePoint, true))
+        } catch {
+            XCTFail("Did not expect exception")
+        }
+        do {
+            let curvePoint = Point(CurveP384.gx, BInt.ZERO)
+            let _ = try PublicKey(kem: .P384, bytes: Curve.p384.encodePoint(curvePoint, true))
+        } catch {
+            XCTFail("Did not expect exception")
+        }
+        do {
+            let curvePoint = Point(CurveP521.gx, BInt.ZERO)
+            let _ = try PublicKey(kem: .P521, bytes: Curve.p521.encodePoint(curvePoint, true))
+        } catch {
+            XCTFail("Did not expect exception")
         }
     }
 }

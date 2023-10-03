@@ -10,7 +10,7 @@ import BigInt
 
 /// There are five different public key types corresponding to the five KEM's
 ///
-/// * P256 - the key is a 65 byte value corresponding to a NIST  secp256r1 uncompressed curve point
+/// * P256 - the key is a 65 byte value corresponding to a NIST secp256r1 uncompressed curve point
 /// * P384 - the key is a 97 byte value corresponding to a NIST secp384r1 uncompressed curve point
 /// * P521 - the key is a 133 byte value corresponding to a NIST secp521r1 uncompressed curve point
 /// * X25519 - the key is a 32 byte value corresponding to a curve X25519 public key
@@ -33,34 +33,56 @@ public struct PublicKey: CustomStringConvertible, Equatable {
     ///   - bytes: The key bytes
     /// - Throws: An exception if *bytes* has wrong size for the key type
     public init(kem: KEM, bytes: Bytes) throws {
-        self.bytes = bytes
         self.kem = kem
         switch self.kem {
         case .P256:
-            self.w = try Curve.p256.decodePoint(self.bytes)
+            self.w = try Curve.p256.decodePoint(bytes)
             guard Curve.p256.contains(self.w!) && !self.w!.infinity else {
                 throw HPKEException.publicKeyParameter
             }
+            if bytes[0] == 4 {
+                // uncompressed point
+                self.bytes = bytes
+            } else {
+                // compressed point
+                self.bytes = Curve.p256.encodePoint(self.w!, false)
+            }
         case .P384:
-            self.w = try Curve.p384.decodePoint(self.bytes)
+            self.w = try Curve.p384.decodePoint(bytes)
             guard Curve.p384.contains(self.w!) && !self.w!.infinity else {
                 throw HPKEException.publicKeyParameter
             }
+            if bytes[0] == 4 {
+                // uncompressed point
+                self.bytes = bytes
+            } else {
+                // compressed point
+                self.bytes = Curve.p384.encodePoint(self.w!, false)
+            }
         case .P521:
-            self.w = try Curve.p521.decodePoint(self.bytes)
+            self.w = try Curve.p521.decodePoint(bytes)
             guard Curve.p521.contains(self.w!) && !self.w!.infinity else {
                 throw HPKEException.publicKeyParameter
             }
+            if bytes[0] == 4 {
+                // uncompressed point
+                self.bytes = bytes
+            } else {
+                // compressed point
+                self.bytes = Curve.p521.encodePoint(self.w!, false)
+            }
         case .X25519:
-            guard bytes.count == 32 else {
+            guard bytes.count == Curve25519.keySize else {
                 throw HPKEException.publicKeyParameter
             }
+            self.bytes = bytes
             self.w = nil
             try checkZero()
         case .X448:
-            guard bytes.count == 56 else {
+            guard bytes.count == Curve448.keySize else {
                 throw HPKEException.publicKeyParameter
             }
+            self.bytes = bytes
             self.w = nil
             try checkZero()
         }
@@ -90,9 +112,9 @@ public struct PublicKey: CustomStringConvertible, Equatable {
             guard let oid = seq1.get(0) as? ASN1ObjectIdentifier else {
                 throw HPKEException.asn1Structure
             }
-            if oid == Curve25519.OID && bitString.bits.count == 32 {
+            if oid == Curve25519.OID && bitString.bits.count == Curve25519.keySize {
                 try self.init(kem: .X25519, bytes: bitString.bits)
-            } else if oid == Curve448.OID && bitString.bits.count == 56 {
+            } else if oid == Curve448.OID && bitString.bits.count == Curve448.keySize {
                 try self.init(kem: .X448, bytes: bitString.bits)
             } else {
                 throw HPKEException.asn1Structure
@@ -108,11 +130,11 @@ public struct PublicKey: CustomStringConvertible, Equatable {
             guard let oid2 = seq1.get(1) as? ASN1ObjectIdentifier else {
                 throw HPKEException.asn1Structure
             }
-            if oid2 == CurveP256.oid && bitString.bits.count == 65 {
+            if oid2 == CurveP256.oid && bitString.bits.count == CurveP256.publicKeySize {
                 try self.init(kem: .P256, bytes: bitString.bits)
-            } else if oid2 == CurveP384.oid && bitString.bits.count == 97 {
+            } else if oid2 == CurveP384.oid && bitString.bits.count == CurveP384.publicKeySize {
                 try self.init(kem: .P384, bytes: bitString.bits)
-            } else if oid2 == CurveP521.oid && bitString.bits.count == 133 {
+            } else if oid2 == CurveP521.oid && bitString.bits.count == CurveP521.publicKeySize {
                 try self.init(kem: .P521, bytes: bitString.bits)
             } else {
                 throw HPKEException.asn1Structure
@@ -161,7 +183,6 @@ public struct PublicKey: CustomStringConvertible, Equatable {
     public static func == (key1: PublicKey, key2: PublicKey) -> Bool {
         return key1.kem == key2.kem && key1.bytes == key2.bytes
     }
-
 
     func getASN1() -> ASN1 {
         switch self.kem {
