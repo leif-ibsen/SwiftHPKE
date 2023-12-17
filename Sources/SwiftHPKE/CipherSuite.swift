@@ -5,6 +5,9 @@
 //  Created by Leif Ibsen on 19/06/2023.
 //
 
+typealias Limb = UInt64
+typealias Limbs = [UInt64]
+
 /// Unsigned 8 bit value
 public typealias Byte = UInt8
 /// Array of unsigned 8 bit values

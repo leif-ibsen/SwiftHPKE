@@ -17,7 +17,7 @@ SwiftHPKE implements the Hybrid Public Key Encryption standard as defined in RFC
 In your project Package.swift file add a dependency like<br/>
 
 	  dependencies: [
-	  .package(url: "https://github.com/leif-ibsen/SwiftHPKE", from: "1.6.0"),
+	  .package(url: "https://github.com/leif-ibsen/SwiftHPKE", from: "2.0.0"),
 	  ]
 SwiftHPKE requires Swift 5.0. It also requires that the Int and UInt types be 64 bit types.
 SwiftHPKE uses Apple's CryptoKit framework. Therefore, for macOS the version must be at least 10.15,
@@ -287,11 +287,12 @@ The encryption and decryption speed in base mode, once the *Sender* or *Recipien
 </table>
 
 <h2 id="dep"><b>Dependencies</b></h2>
-The SwiftHPKE package depends on the ASN1 and BigInt packages
+The SwiftHPKE package depends on the ASN1, BigInt and Digest packages
 
     dependencies: [
         .package(url: "https://github.com/leif-ibsen/ASN1", from: "2.2.0"),
         .package(url: "https://github.com/leif-ibsen/BigInt", from: "1.14.0"),
+        .package(url: "https://github.com/leif-ibsen/Digest", from: "1.1.0"),
     ],
 
 <h2 id="ref"><b>References</b></h2>

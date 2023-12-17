@@ -5,6 +5,8 @@
 //  Created by Leif Ibsen on 20/06/2023.
 //
 
+import Digest
+
 ///
 /// Key Derivation Functions
 ///
@@ -31,37 +33,39 @@ public enum KDF: CustomStringConvertible, CaseIterable {
 }
 
 struct KDFStructure {
-    
-    let md: MessageDigest
+
+    let kind: MessageDigest.Kind
+    let dl: Int
     let suite_id: Bytes
     
     init(_ kdf: KDF, _ suite_id: Bytes) {
         switch kdf {
         case .KDF256:
-            self.md = MessageDigest(.SHA2_256)
+            self.kind = .SHA2_256
         case .KDF384:
-            self.md = MessageDigest(.SHA2_384)
+            self.kind = .SHA2_384
         case .KDF512:
-            self.md = MessageDigest(.SHA2_512)
+            self.kind = .SHA2_512
         }
+        self.dl = MessageDigest(self.kind).digestLength
         self.suite_id = suite_id
     }
-    
+
     func extract(_ salt: Bytes, _ ikm: Bytes) -> Bytes {
-        return HMac(self.md, salt.count > 0 ? salt : Bytes(repeating: 0, count: md.digestLength)).doFinal(ikm)
+        return HMAC(self.kind, salt.count > 0 ? salt : Bytes(repeating: 0, count: self.dl)).compute(ikm)
     }
     
     func expand(_ prk: Bytes, _ info: Bytes, _ L: Int) -> Bytes {
-        assert(0 <= L && L <= self.md.digestLength * 255)
-        let hMac = HMac(self.md, prk)
-        let (q, r) = L.quotientAndRemainder(dividingBy: md.digestLength)
+        assert(0 <= L && L <= self.dl * 255)
+        let hMac = HMAC(self.kind, prk)
+        let (q, r) = L.quotientAndRemainder(dividingBy: self.dl)
         let n = r == 0 ? q : q + 1
         var t: Bytes = []
         var T: Bytes = []
         var x = Byte(0)
         for _ in 0 ..< n {
             x += 1
-            t = hMac.doFinal(t + info + [x])
+            t = hMac.compute(t + info + [x])
             hMac.reset()
             T += t
         }
