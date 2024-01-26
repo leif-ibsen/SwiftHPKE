@@ -5,15 +5,6 @@
 //  Created by Leif Ibsen on 19/06/2023.
 //
 
-/// Based on its *CipherSuite*, a *Recipient* instance can decrypt a sequence of messages in one of four modes:
-///
-/// * Base mode
-/// * Preshared key mode
-/// * Authenticated mode
-/// * Authenticated, preshared key mode
-///
-/// The decryption of the messages must be done in the order in which they were encrypted.<br/>
-/// A *Recipient* instance can also retrieve a generated export secret.
 public class Recipient {
     
     let suite: CipherSuite
