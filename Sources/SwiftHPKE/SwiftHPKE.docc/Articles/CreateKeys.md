@@ -4,7 +4,7 @@
 
 Given a *CipherSuite* instance it is possible to generate new public- and private keys.
 ### Example
-```Swift
+```swift
 import SwiftHPKE
 
 let suite = CipherSuite(kem: .X25519, kdf: .KDF256, aead: .CHACHAPOLY)
@@ -16,7 +16,7 @@ print(pubKey)
 print(privKey)
 ```
 giving (for example):
-```Swift
+```swift
 Sequence (2):
   Sequence (1):
     Object Identifier: 1.3.101.110

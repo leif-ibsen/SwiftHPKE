@@ -16,7 +16,8 @@ public struct PublicKey: CustomStringConvertible, Equatable {
     
     // MARK: Initializers
         
-    /// Creates a PublicKey from its type and key bytes.<br/>
+    /// Creates a PublicKey from its type and key bytes.
+    ///
     /// For types P256, P384 and P521 the key bytes represents
     /// either a compressed curve point or an uncompressed curve point.
     ///

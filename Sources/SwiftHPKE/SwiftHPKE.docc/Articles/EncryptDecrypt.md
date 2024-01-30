@@ -4,7 +4,7 @@
 A *CipherSuite* instance can encrypt (seal) a single plaintext message and decrypt (open) a single ciphertext message.
 
 ### Example
-```Swift
+```swift
 // Encryption and decryption of a single message in base mode
 
 import SwiftHPKE
@@ -21,14 +21,14 @@ let decrypted = try theSuite.open(privateKey: recipientPriv, info: [1, 2, 3], ct
 print(String(bytes: decrypted, encoding: .utf8)!)
 ```
 giving:
-```Swift
+```swift
 Hi, there
 ```
 Using a *Sender* instance and a *Recipient* instance it is possible to encrypt a sequence of plaintext messages
 and decrypt a sequence of ciphertext messages.
 
 ### Example
-```Swift
+```swift
 // Encryption and decryption of several messages in authenticated mode
 
 import SwiftHPKE
@@ -63,7 +63,7 @@ print(String(bytes: decrypted2, encoding: .utf8)!)
 print(String(bytes: decrypted3, encoding: .utf8)!)
 ```
 giving:
-```Swift
+```swift
 Hi, there 1
 Hi, there 2
 Hi, there 3

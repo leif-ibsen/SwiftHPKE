@@ -3,7 +3,7 @@
 ## 
 It is possible to load existing keys from their PEM encodings or DER encodings.
 ### Example
-```Swift
+```swift
 import SwiftHPKE
 
 // Public key encoding - curve P384
@@ -36,7 +36,7 @@ print(pubKey)
 print(privKey)
 ```
 giving:
-```Swift
+```swift
 Sequence (2):
   Sequence (2):
     Object Identifier: 1.2.840.10045.2.1

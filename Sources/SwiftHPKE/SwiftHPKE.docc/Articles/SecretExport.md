@@ -4,7 +4,7 @@
 Given the recipient's public key, a sender can generate a secret that only the recipient can know.
 
 ### Example 1
-```Swift
+```swift
 import SwiftHPKE
 
 // The aead need not be .EXPORTONLY, any aead will work
@@ -23,13 +23,13 @@ let retrievedSecret = try theSuite.receiveExport(privateKey: recipientPrivKey, i
 print("Retrieved secret:", retrievedSecret)
 ```
 giving (for example):
-```Swift
+```swift
 Generated secret: [172, 169, 119, 121, 167, 53, 213, 12, 0, 29]
 Retrieved secret: [172, 169, 119, 121, 167, 53, 213, 12, 0, 29]
 ```
 
 ### Example 2
-```Swift
+```swift
 import SwiftHPKE
 
 // The aead need not be .EXPORTONLY, any aead will work
@@ -50,7 +50,7 @@ let retrievedSecret = try receiver.receiveExport(context: [1, 2, 3], L: 10)
 print("Retrieved secret:", retrievedSecret)
 ```
 giving (for example):
-```Swift
+```swift
 Generated secret: [3, 230, 139, 128, 86, 4, 81, 78, 110, 135]
 Retrieved secret: [3, 230, 139, 128, 86, 4, 81, 78, 110, 135]
 ```

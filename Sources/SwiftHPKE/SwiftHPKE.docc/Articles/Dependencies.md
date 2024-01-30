@@ -3,7 +3,7 @@
 ## 
 
 SwiftHPKE depends on the ASN1, BigInt and Digest packages
-```Swift
+```swift
 dependencies: [
   .package(url: "https://github.com/leif-ibsen/ASN1", from: "2.3.0"),
   .package(url: "https://github.com/leif-ibsen/BigInt", from: "1.15.0"),
