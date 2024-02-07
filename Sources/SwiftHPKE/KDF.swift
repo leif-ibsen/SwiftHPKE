@@ -7,12 +7,10 @@
 
 import Digest
 
-///
-/// Key Derivation Functions
-///
+/// Key derivation functions
 public enum KDF: CustomStringConvertible, CaseIterable {
     
-    /// Textual description of *self*
+    /// Textual description of `self`
     public var description: String {
         switch self {
         case .KDF256:

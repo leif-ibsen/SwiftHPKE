@@ -2,8 +2,8 @@
 
 ## Overview
 
-A CipherSuite instance combines a *Key Encapsulation Mechanism* (KEM), a *Key Derivation Function* (KDF)
-and a *AEAD Encryption Algorithm* (AEAD).
+A CipherSuite instance combines a *Key Encapsulation Mechanism* (``SwiftHPKE/KEM``), a *Key Derivation Function* (``SwiftHPKE/KDF``)
+and a *AEAD Encryption Algorithm* (``SwiftHPKE/AEAD``).
 It can encrypt or decrypt a single message in one of four modes:
 
 * Base mode

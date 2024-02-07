@@ -8,6 +8,7 @@
 import ASN1
 import BigInt
 
+/// The PublicKey structure
 public struct PublicKey: CustomStringConvertible, Equatable {
     
     let kem: KEM
@@ -24,7 +25,7 @@ public struct PublicKey: CustomStringConvertible, Equatable {
     /// - Parameters:
     ///   - kem: The key type
     ///   - bytes: The key bytes
-    /// - Throws: An exception if *bytes* has wrong size for the key type
+    /// - Throws: An exception if `bytes` has wrong size for the key type
     public init(kem: KEM, bytes: Bytes) throws {
         self.kem = kem
         switch self.kem {
@@ -155,13 +156,13 @@ public struct PublicKey: CustomStringConvertible, Equatable {
     
     // MARK: Computed Properties
     
-    /// The ASN1 encoding of *self*
+    /// The ASN1 encoding of `self`
     public var asn1: ASN1 { get { do { return self.getASN1() } } }
-    /// The DER encoding of *self*
+    /// The DER encoding of `self`
     public var der: Bytes { get { return self.asn1.encode() } }
-    /// The PEM base 64 encoding of *self*
+    /// The PEM base 64 encoding of `self`
     public var pem: String { get { return Base64.pemEncode(self.der, "PUBLIC KEY") } }
-    /// A textual representation of the ASN1 encoding of *self*
+    /// A textual representation of the ASN1 encoding of `self`
     public var description: String { get { return self.asn1.description } }
 
     
@@ -172,7 +173,7 @@ public struct PublicKey: CustomStringConvertible, Equatable {
     /// - Parameters:
     ///   - key1: a public key
     ///   - key2: a public key
-    /// - Returns: *true* if key1 and key2 are equal, *false* otherwise
+    /// - Returns: `true` if key1 and key2 are equal, `false` otherwise
     public static func == (key1: PublicKey, key2: PublicKey) -> Bool {
         return key1.kem == key2.kem && key1.bytes == key2.bytes
     }

@@ -5,6 +5,7 @@
 //  Created by Leif Ibsen on 19/06/2023.
 //
 
+/// The Sender class
 public class Sender {
 
     let suite: CipherSuite
@@ -34,7 +35,7 @@ public class Sender {
     ///   - suite: The CipherSuite of the Sender
     ///   - publicKey: The recipient public key
     ///   - info: The additional information
-    /// - Throws: An exception if *publicKey* does not match *suite*
+    /// - Throws: An exception if `publicKey` does not match `suite`
     public convenience init(suite: CipherSuite, publicKey: PublicKey, info: Bytes) throws {
         try self.init([], suite, publicKey, info)
     }
@@ -61,7 +62,7 @@ public class Sender {
     ///   - info: The additional information
     ///   - psk: The preshared key
     ///   - pskId: The preshared key id
-    /// - Throws: An exception if *publicKey* does not match *suite* or the *psk* parameters are inconsistent
+    /// - Throws: An exception if `publicKey` does not match `suite` or the `psk` parameters are inconsistent
     public convenience init(suite: CipherSuite, publicKey: PublicKey, info: Bytes, psk: Bytes, pskId: Bytes) throws {
         try self.init([], suite, publicKey, info, psk, pskId)
     }
@@ -85,7 +86,7 @@ public class Sender {
     ///   - publicKey: The recipient public key
     ///   - info: The additional information
     ///   - authentication: The sender private key
-    /// - Throws: An exception if one of the keys does not match *suite*
+    /// - Throws: An exception if one of the keys does not match `suite`
     public convenience init(suite: CipherSuite, publicKey: PublicKey, info: Bytes, authentication: PrivateKey) throws {
         try self.init([], suite, publicKey, info, authentication)
     }
@@ -114,7 +115,7 @@ public class Sender {
     ///   - authentication: The sender private key
     ///   - psk: The preshared key
     ///   - pskId: The preshared key id
-    /// - Throws: An exception if one of the keys does not match *suite* or the *psk* parameters are inconsistent
+    /// - Throws: An exception if one of the keys does not match `suite` or the `psk` parameters are inconsistent
     public convenience init(suite: CipherSuite, publicKey: PublicKey, info: Bytes, authentication: PrivateKey, psk: Bytes, pskId: Bytes) throws {
         try self.init([], suite, publicKey, info, authentication, psk, pskId)
     }
@@ -134,7 +135,7 @@ public class Sender {
     ///   - pt: The plain text to encrypt
     ///   - aad: The associated data
     /// - Returns: The cipher text
-    /// - Throws: An exception if encryption fails or *self.suite.aead* is EXPORTONLY
+    /// - Throws: An exception if encryption fails or `self.suite.aead` is EXPORTONLY
     public func seal(pt: Bytes, aad: Bytes) throws -> Bytes {
         return try self.suite.aeadStructure.seal(self.key, computeNonce(), aad, pt)
     }

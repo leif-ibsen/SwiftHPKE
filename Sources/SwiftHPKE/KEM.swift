@@ -8,12 +8,10 @@
 import Foundation
 import BigInt
 
-///
-/// Key Encapsulation Mechanisms
-///
+/// Key encapsulation mechanisms
 public enum KEM: CustomStringConvertible, CaseIterable {
     
-    /// Textual description of *self*
+    /// Textual description of `self`
     public var description: String {
         switch self {
         case .P256:

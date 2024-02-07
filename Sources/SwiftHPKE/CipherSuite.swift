@@ -10,9 +10,11 @@ typealias Limbs = [UInt64]
 
 /// Unsigned 8 bit value
 public typealias Byte = UInt8
+
 /// Array of unsigned 8 bit values
 public typealias Bytes = [UInt8]
 
+/// The CipherSuite structure
 public struct CipherSuite: CustomStringConvertible {
 
     let kemStructure: KEMStructure
@@ -94,26 +96,26 @@ public struct CipherSuite: CustomStringConvertible {
 
     // MARK: Computed properties
 
-    /// A textual representation of *self*
+    /// A textual representation of `self`
     public var description: String { get { return "(KEM:" + self.kem.description + " KDF:" + self.kdf.description + " AEAD:" + self.aead.description + ")"} }
 
 
     // MARK: Instance Methods
     
-    /// Derives a public- and private HPKE key pair for *self* based on keying material
+    /// Derives a public- and private HPKE key pair for `self` based on keying material
     ///
     /// - Parameters:
     ///   - ikm: The keying material
     /// - Returns: The public key and private key pair
-    /// - Throws: A *derivedKeyError* exception in extremely rare cases
+    /// - Throws: A `derivedKeyError` exception in extremely rare cases
     public func deriveKeyPair(ikm: Bytes) throws -> (PublicKey, PrivateKey) {
         return try self.kemStructure.deriveKeyPair(ikm)
     }
 
-    /// Generates a public- and private HPKE key pair for *self*
+    /// Generates a public- and private HPKE key pair for `self`
     ///
     /// - Returns: The public key and private key pair
-    /// - Throws: A *derivedKeyError* exception in extremely rare cases
+    /// - Throws: A `derivedKeyError` exception in extremely rare cases
     public func makeKeyPair() throws -> (PublicKey, PrivateKey) {
         var ikm = Bytes(repeating: 0, count: self.kemStructure.Nsk)
         KEMStructure.randomBytes(&ikm)
@@ -131,7 +133,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - pt: The plain text to encrypt
     ///   - aad: The associated data
     /// - Returns: The encapsulated key and cipher text
-    /// - Throws: An exception if *publicKey* does not match *self* or the encryption fails or *self.aead* is EXPORTONLY
+    /// - Throws: An exception if `publicKey` does not match `self` or the encryption fails or `self.aead` is EXPORTONLY
     public func seal(publicKey: PublicKey, info: Bytes, pt: Bytes, aad: Bytes) throws -> (encap: Bytes, ct: Bytes) {
         let sender = try Sender(suite: self, publicKey: publicKey, info: info)
         return (sender.encapsulatedKey, try sender.seal(pt: pt, aad: aad))
@@ -146,7 +148,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - aad: The associated data
     ///   - encap: The encapsulated key
     /// - Returns: The plain text
-    /// - Throws: An exception if one of the keys does not match *self* or the decryption fails or *self.aead* is EXPORTONLY
+    /// - Throws: An exception if one of the keys does not match `self` or the decryption fails or `self.aead` is EXPORTONLY
     public func open(privateKey: PrivateKey, info: Bytes, ct: Bytes, aad: Bytes, encap: Bytes) throws -> Bytes {
         let recipient = try Recipient(suite: self, privateKey: privateKey, info: info, encap: encap)
         return try recipient.open(ct: ct, aad: aad)
@@ -160,7 +162,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - context: The export context
     ///   - L: The length of the export secret
     /// - Returns: The encapsulated key and export secret
-    /// - Throws: An exception if *publicKey* does not match *self* or L is negative or too large
+    /// - Throws: An exception if `publicKey` does not match `self` or L is negative or too large
 
     public func sendExport(publicKey: PublicKey, info: Bytes, context: Bytes, L: Int) throws -> (encapsulatedKey: Bytes, secret: Bytes) {
         try self.checkExportSize(L)
@@ -179,7 +181,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - L: The length of the export secret
     ///   - encap: The encapsulated key
     /// - Returns: The export secret
-    /// - Throws: An exception if one of the keys does not match *self* or L is negative or too large
+    /// - Throws: An exception if one of the keys does not match `self` or L is negative or too large
     public func receiveExport(privateKey: PrivateKey, info: Bytes, context: Bytes, L: Int, encap: Bytes) throws -> Bytes {
         try self.checkExportSize(L)
         try self.checkPrivKey(privateKey)
@@ -201,7 +203,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - pt: The plain text to encrypt
     ///   - aad: The associated data
     /// - Returns: The encapsulted key and cipher text
-    /// - Throws: An exception if *publicKey* does not match *self* or the encryption fails or the *psk* parameters are inconsistent or *self.aead* is EXPORTONLY
+    /// - Throws: An exception if `publicKey` does not match `self` or the encryption fails or the `psk` parameters are inconsistent or `self.aead` is EXPORTONLY
     public func seal(publicKey: PublicKey, info: Bytes, psk: Bytes, pskId: Bytes, pt: Bytes, aad: Bytes) throws -> (encap: Bytes, ct: Bytes) {
         let sender = try Sender(suite: self, publicKey: publicKey, info: info, psk: psk, pskId: pskId)
         return (sender.encapsulatedKey, try sender.seal(pt: pt, aad: aad))
@@ -218,7 +220,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - aad: The associated data
     ///   - encap: The encapsulated key
     /// - Returns: The plain text
-    /// - Throws: An exception if one of the keys does not match *self* or the decryption fails or the *psk* parameters are inconsistent or *self.aead* is EXPORTONLY
+    /// - Throws: An exception if one of the keys does not match `self` or the decryption fails or the `psk` parameters are inconsistent or `self.aead` is EXPORTONLY
     public func open(privateKey: PrivateKey, info: Bytes, psk: Bytes, pskId: Bytes, ct: Bytes, aad: Bytes, encap: Bytes) throws -> Bytes {
         let recipient = try Recipient(suite: self, privateKey: privateKey, info: info, psk: psk, pskId: pskId, encap: encap)
         return try recipient.open(ct: ct, aad: aad)
@@ -234,7 +236,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - psk: The preshared key
     ///   - pskId: The preshared key id
     /// - Returns: The encapsulated key and export secret
-    /// - Throws: An exception if *publicKey* does not match *self* or the *psk* parameters are inconsistent or L is negative or too large
+    /// - Throws: An exception if `publicKey` does not match `self` or the `psk` parameters are inconsistent or L is negative or too large
     public func sendExport(publicKey: PublicKey, info: Bytes, context: Bytes, L: Int, psk: Bytes, pskId: Bytes) throws -> (encapsulatedKey: Bytes, secret: Bytes) {
         try self.checkExportSize(L)
         try self.checkPubKey(publicKey)
@@ -254,7 +256,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - pskId: The preshared key id
     ///   - encap: The encapsulated key
     /// - Returns: The export secret
-    /// - Throws: An exception if one of the keys does not match *self* or the *psk* parameters are inconsistent or L is negative or too large
+    /// - Throws: An exception if one of the keys does not match `self` or the `psk` parameters are inconsistent or L is negative or too large
     public func receiveExport(privateKey: PrivateKey, info: Bytes, context: Bytes, L: Int, psk: Bytes, pskId: Bytes, encap: Bytes) throws -> Bytes {
         try self.checkExportSize(L)
         try self.checkPrivKey(privateKey)
@@ -275,7 +277,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - pt: The plain text to encrypt
     ///   - aad: The associated data
     /// - Returns: The encapsulted key and cipher text
-    /// - Throws: An exception if one of the keys does not match *self* or the encryption fails or *self.aead* is EXPORTONLY
+    /// - Throws: An exception if one of the keys does not match `self` or the encryption fails or `self.aead` is EXPORTONLY
     public func seal(publicKey: PublicKey, info: Bytes, authentication: PrivateKey, pt: Bytes, aad: Bytes) throws -> (encap: Bytes, ct: Bytes) {
         let sender = try Sender(suite: self, publicKey: publicKey, info: info, authentication: authentication)
         return (sender.encapsulatedKey, try sender.seal(pt: pt, aad: aad))
@@ -291,7 +293,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - aad: The associated data
     ///   - encap: The encapsulated key
     /// - Returns: The plain text
-    /// - Throws: An exception if one of the keys does not match *self* or the decryption fails or *self.aead* is EXPORTONLY
+    /// - Throws: An exception if one of the keys does not match `self` or the decryption fails or `self.aead` is EXPORTONLY
     public func open(privateKey: PrivateKey, info: Bytes, authentication: PublicKey, ct: Bytes, aad: Bytes, encap: Bytes) throws -> Bytes {
         let recipient = try Recipient(suite: self, privateKey: privateKey, info: info, authentication: authentication, encap: encap)
         return try recipient.open(ct: ct, aad: aad)
@@ -306,7 +308,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - L: The length of the export secret
     ///   - authentication: The sender private key
     /// - Returns: The encapsulated key and export secret
-    /// - Throws: An exception if one of the keys does not match *self* or L is negative or too large
+    /// - Throws: An exception if one of the keys does not match `self` or L is negative or too large
     public func sendExport(publicKey: PublicKey, info: Bytes, context: Bytes, L: Int, authentication: PrivateKey) throws -> (encapsulatedKey: Bytes, secret: Bytes) {
         try self.checkExportSize(L)
         try self.checkPubKey(publicKey)
@@ -328,7 +330,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - pskId: The preshared key id
     ///   - encap: The encapsulated key
     /// - Returns: The export secret
-    /// - Throws: An exception if one of the keys does not match *self* or L is negative or too large
+    /// - Throws: An exception if one of the keys does not match `self` or L is negative or too large
     public func receiveExport(privateKey: PrivateKey, info: Bytes, context: Bytes, L: Int, authentication: PublicKey, encap: Bytes) throws -> Bytes {
         try self.checkExportSize(L)
         try self.checkPrivKey(privateKey)
@@ -352,7 +354,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - pt: The plain text to encrypt
     ///   - aad: The associated data
     /// - Returns: The encapsulted key and cipher text
-    /// - Throws: An exception if one of the keys does not match *self* or the encryption fails or the *psk* parameters are inconsistent or *self.aead* is EXPORTONLY
+    /// - Throws: An exception if one of the keys does not match `self` or the encryption fails or the `psk` parameters are inconsistent or `self.aead` is EXPORTONLY
     public func seal(publicKey: PublicKey, info: Bytes, authentication: PrivateKey, psk: Bytes, pskId: Bytes, pt: Bytes, aad: Bytes) throws -> (encap: Bytes, ct: Bytes) {
         let sender = try Sender(suite: self, publicKey: publicKey, info: info, authentication: authentication, psk: psk, pskId: pskId)
         return (sender.encapsulatedKey, try sender.seal(pt: pt, aad: aad))
@@ -370,7 +372,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - aad: The associated data
     ///   - encap: The encapsulated key
     /// - Returns: The plain text
-    /// - Throws: An exception if one of the keys does not match *self* or the decryption fails or the *psk* parameters are inconsistent or *self.aead* is EXPORTONLY
+    /// - Throws: An exception if one of the keys does not match `self` or the decryption fails or the `psk` parameters are inconsistent or `self.aead` is EXPORTONLY
     public func open(privateKey: PrivateKey, info: Bytes, authentication: PublicKey, psk: Bytes, pskId: Bytes, ct: Bytes, aad: Bytes, encap: Bytes) throws -> Bytes {
         let recipient = try Recipient(suite: self, privateKey: privateKey, info: info, authentication: authentication, psk: psk, pskId: pskId, encap: encap)
         return try recipient.open(ct: ct, aad: aad)
@@ -387,7 +389,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - psk: The preshared key
     ///   - pskId: The preshared key id
     /// - Returns: The encapsulated key and export secret
-    /// - Throws: An exception if one of the keys does not match *self* or the *psk* parameters are inconsistent or L is negative or too large
+    /// - Throws: An exception if one of the keys does not match `self` or the `psk` parameters are inconsistent or L is negative or too large
     public func sendExport(publicKey: PublicKey, info: Bytes, context: Bytes, L: Int, authentication: PrivateKey, psk: Bytes, pskId: Bytes) throws -> (encapsulatedKey: Bytes, secret: Bytes) {
         try self.checkExportSize(L)
         try self.checkPubKey(publicKey)
@@ -409,7 +411,7 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - pskId: The preshared key id
     ///   - encap: The encapsulated key
     /// - Returns: The export secret
-    /// - Throws: An exception if one of the keys does not match *self* or the *psk* parameters are inconsistent or L is negative or too large
+    /// - Throws: An exception if one of the keys does not match `self` or the `psk` parameters are inconsistent or L is negative or too large
     public func receiveExport(privateKey: PrivateKey, info: Bytes, context: Bytes, L: Int, authentication: PublicKey, psk: Bytes, pskId: Bytes, encap: Bytes) throws -> Bytes {
         try self.checkExportSize(L)
         try self.checkPrivKey(privateKey)

@@ -8,6 +8,7 @@
 import ASN1
 import BigInt
 
+/// The PrivateKey structure
 public struct PrivateKey: CustomStringConvertible, Equatable {
     
     let kem: KEM
@@ -20,7 +21,7 @@ public struct PrivateKey: CustomStringConvertible, Equatable {
     /// - Parameters:
     ///   - kem: The key type
     ///   - bytes: The key bytes
-    /// - Throws: An exception if *bytes* has wrong size for the key type
+    /// - Throws: An exception if `bytes` has wrong size for the key type
     public init(kem: KEM, bytes: Bytes) throws {
         self.kem = kem
         switch self.kem {
@@ -160,7 +161,7 @@ public struct PrivateKey: CustomStringConvertible, Equatable {
     
     // MARK: Computed Properties
     
-    /// The ASN1 encoding of *self*
+    /// The ASN1 encoding of `self`
     public var asn1: ASN1 { get { do {
         switch self.kem {
         case .P256:
@@ -208,11 +209,11 @@ public struct PrivateKey: CustomStringConvertible, Equatable {
                 .add(ASN1OctetString(ASN1OctetString(self.bytes).encode()))
         }
     } } }
-    /// The DER encoding of *self*
+    /// The DER encoding of `self`
     public var der: Bytes { get { return self.asn1.encode() } }
-    /// The PEM base 64 encoding of *self*
+    /// The PEM base 64 encoding of `self`
     public var pem: String { get { return Base64.pemEncode(self.der, "PRIVATE KEY") } }
-    /// A textual representation of the ASN1 encoding of *self*
+    /// A textual representation of the ASN1 encoding of `self`
     public var description: String { get { return self.asn1.description } }
 
 
@@ -223,7 +224,7 @@ public struct PrivateKey: CustomStringConvertible, Equatable {
     /// - Parameters:
     ///   - key1: a private key
     ///   - key2: a private key
-    /// - Returns: *true* if key1 and key2 are equal, *false* otherwise
+    /// - Returns: `true` if key1 and key2 are equal, `false` otherwise
     public static func == (key1: PrivateKey, key2: PrivateKey) -> Bool {
         return key1.kem == key2.kem && key1.bytes == key2.bytes
     }

@@ -1,9 +1,10 @@
 # Encryption and Decryption
 
 ## 
-A *CipherSuite* instance can encrypt (seal) a single plaintext message and decrypt (open) a single ciphertext message.
+A ``SwiftHPKE/CipherSuite`` instance can encrypt (seal) a single plaintext message and decrypt (open) a single ciphertext message.
 
 ### Example
+
 ```swift
 // Encryption and decryption of a single message in base mode
 
@@ -24,10 +25,11 @@ giving:
 ```swift
 Hi, there
 ```
-Using a *Sender* instance and a *Recipient* instance it is possible to encrypt a sequence of plaintext messages
+Using a ``SwiftHPKE/Sender`` instance and a ``SwiftHPKE/Recipient`` instance it is possible to encrypt a sequence of plaintext messages
 and decrypt a sequence of ciphertext messages.
 
 ### Example
+
 ```swift
 // Encryption and decryption of several messages in authenticated mode
 
@@ -68,3 +70,6 @@ Hi, there 1
 Hi, there 2
 Hi, there 3
 ```
+
+> Important:
+The messages must be decrypted in the order in which they were encrypted.

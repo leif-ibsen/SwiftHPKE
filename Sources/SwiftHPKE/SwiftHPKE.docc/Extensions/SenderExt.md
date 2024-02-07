@@ -2,14 +2,14 @@
 
 ## Overview
 
-Based on its *CipherSuite*, a *Sender* instance can encrypt a sequence of messages in one of four modes:
+Based on its ``SwiftHPKE/CipherSuite``, a `Sender` instance can encrypt a sequence of messages in one of four modes:
 
 * Base mode
 * Preshared key mode
 * Authenticated mode
 * Authenticated, preshared key mode
  
-A *Sender* instance can also generate an export secret that only the recipient can know.
+A `Sender` instance can also generate an export secret that only the recipient can know.
 
 ## Topics
 

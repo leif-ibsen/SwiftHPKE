@@ -2,7 +2,8 @@
 
 ## 
 
-Given a *CipherSuite* instance it is possible to generate new public- and private keys.
+Given a ``SwiftHPKE/CipherSuite`` instance it is possible to generate new ``SwiftHPKE/PublicKey``'s and ``SwiftHPKE/PrivateKey``'s.
+
 ### Example
 ```swift
 import SwiftHPKE

@@ -5,6 +5,7 @@
 //  Created by Leif Ibsen on 19/06/2023.
 //
 
+/// The Recipient class
 public class Recipient {
     
     let suite: CipherSuite
@@ -24,7 +25,7 @@ public class Recipient {
     ///   - privateKey: The recipient private key
     ///   - info: The additional information
     ///   - encap: The encapsulated key
-    /// - Throws: An exception if one of the keys does not match *suite*
+    /// - Throws: An exception if one of the keys does not match `suite`
     public init(suite: CipherSuite, privateKey: PrivateKey, info: Bytes, encap: Bytes) throws {
         try suite.checkPrivKey(privateKey)
         try suite.checkPubKey(PublicKey(kem: suite.kem, bytes: encap))
@@ -44,7 +45,7 @@ public class Recipient {
     ///   - psk: The preshared key
     ///   - pskId: The preshared key id
     ///   - encap: The encapsulated key
-    /// - Throws: An exception if one of the keys does not match *suite*
+    /// - Throws: An exception if one of the keys does not match `suite`
     public init(suite: CipherSuite, privateKey: PrivateKey, info: Bytes, psk: Bytes, pskId: Bytes, encap: Bytes) throws {
         try suite.checkPrivKey(privateKey)
         try suite.checkPubKey(PublicKey(kem: suite.kem, bytes: encap))
@@ -66,7 +67,7 @@ public class Recipient {
     ///   - info: The additional information
     ///   - authentication: The sender public key
     ///   - encap: The encapsulated key
-    /// - Throws: An exception if one of the keys does not match *suite*
+    /// - Throws: An exception if one of the keys does not match `suite`
     public init(suite: CipherSuite, privateKey: PrivateKey, info: Bytes, authentication: PublicKey, encap: Bytes) throws {
         try suite.checkPrivKey(privateKey)
         try suite.checkPubKey(authentication)
@@ -88,7 +89,7 @@ public class Recipient {
     ///   - psk: The preshared key
     ///   - pskId: The preshared key id
     ///   - encap: The encapsulated key
-    /// - Throws: An exception if one of the keys does not match *suite*
+    /// - Throws: An exception if one of the keys does not match `suite`
     public init(suite: CipherSuite, privateKey: PrivateKey, info: Bytes, authentication: PublicKey, psk: Bytes, pskId: Bytes, encap: Bytes) throws {
         try suite.checkPrivKey(privateKey)
         try suite.checkPubKey(authentication)
@@ -112,7 +113,7 @@ public class Recipient {
     ///   - ct: The cipher text to decrypt
     ///   - aad: The associated data
     /// - Returns: The plain text
-    /// - Throws: An exception if decryption fails or *self.suite.aead* is EXPORTONLY
+    /// - Throws: An exception if decryption fails or `self.suite.aead` is EXPORTONLY
     public func open(ct: Bytes, aad: Bytes) throws -> Bytes {
         return try self.suite.aeadStructure.open(self.key, aad, computeNonce() + ct)
     }

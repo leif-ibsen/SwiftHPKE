@@ -7,12 +7,10 @@
 
 import CryptoKit
 
-///
-/// AEAD Encryption Algorithms
-///
+/// AEAD encryption algorithms
 public enum AEAD: CustomStringConvertible, CaseIterable {
 
-    /// Textual description of *self*
+    /// Textual description of `self`
     public var description: String {
         switch self {
         case .AESGCM128:

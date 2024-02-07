@@ -55,4 +55,4 @@ Generated secret: [3, 230, 139, 128, 86, 4, 81, 78, 110, 135]
 Retrieved secret: [3, 230, 139, 128, 86, 4, 81, 78, 110, 135]
 ```
 The above examples use Base mode. Preshared key mode, Authenticated mode and Authenticated, preshared key mode
-is also possible.
+can also be used.
