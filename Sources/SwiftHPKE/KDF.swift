@@ -7,7 +7,7 @@
 
 import Digest
 
-/// Key derivation functions
+/// The key derivation functions
 public enum KDF: CustomStringConvertible, CaseIterable {
     
     /// Textual description of `self`

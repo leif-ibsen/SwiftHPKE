@@ -5,7 +5,6 @@
 //  Created by Leif Ibsen on 19/06/2023.
 //
 
-/// The Sender class
 public class Sender {
 
     let suite: CipherSuite

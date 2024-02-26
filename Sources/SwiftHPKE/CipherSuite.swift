@@ -14,7 +14,6 @@ public typealias Byte = UInt8
 /// Array of unsigned 8 bit values
 public typealias Bytes = [UInt8]
 
-/// The CipherSuite structure
 public struct CipherSuite: CustomStringConvertible {
 
     let kemStructure: KEMStructure

@@ -1,5 +1,7 @@
 # ``SwiftHPKE/Sender``
 
+The sender
+
 ## Overview
 
 Based on its ``SwiftHPKE/CipherSuite``, a `Sender` instance can encrypt a sequence of messages in one of four modes:

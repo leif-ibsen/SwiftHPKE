@@ -1,5 +1,7 @@
 # ``SwiftHPKE/PublicKey``
 
+The public key
+
 ## Overview
 
 There are five different public key types corresponding to the five KEM's
@@ -26,7 +28,7 @@ There are five different public key types corresponding to the five KEM's
 - ``init(der:)``
 - ``init(pem:)``
 
-### Methods
+### Equality
 
 - ``==(_:_:)``
 

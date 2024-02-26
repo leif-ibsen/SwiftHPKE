@@ -1,5 +1,7 @@
 # ``SwiftHPKE/CipherSuite``
 
+The cipher suite
+
 ## Overview
 
 A CipherSuite instance combines a *Key Encapsulation Mechanism* (``SwiftHPKE/KEM``), a *Key Derivation Function* (``SwiftHPKE/KDF``)
@@ -24,33 +26,33 @@ It can encrypt or decrypt a single message in one of four modes:
 
 - ``init(kem:kdf:aead:)``
 
-### Methods
+### Generate Keys
 
 - ``deriveKeyPair(ikm:)``
 - ``makeKeyPair()``
 
-### Methods - base mode
+### Base mode
 
 - ``seal(publicKey:info:pt:aad:)``
 - ``open(privateKey:info:ct:aad:encap:)``
 - ``sendExport(publicKey:info:context:L:)``
 - ``receiveExport(privateKey:info:context:L:encap:)``
 
-### Methods - preshared key mode
+### Preshared key mode
 
 - ``seal(publicKey:info:psk:pskId:pt:aad:)``
 - ``open(privateKey:info:psk:pskId:ct:aad:encap:)``
 - ``sendExport(publicKey:info:context:L:psk:pskId:)``
 - ``receiveExport(privateKey:info:context:L:psk:pskId:encap:)``
 
-### Methods - authenticated mode
+### Authenticated mode
 
 - ``seal(publicKey:info:authentication:pt:aad:)``
 - ``open(privateKey:info:authentication:ct:aad:encap:)``
 - ``sendExport(publicKey:info:context:L:authentication:)``
 - ``receiveExport(privateKey:info:context:L:authentication:encap:)``
 
-### Methods - authenticated, preshared key mode
+### Authenticated, preshared key mode
 
 - ``seal(publicKey:info:authentication:psk:pskId:pt:aad:)``
 - ``open(privateKey:info:authentication:psk:pskId:ct:aad:encap:)``

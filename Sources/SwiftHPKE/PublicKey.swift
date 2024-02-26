@@ -8,7 +8,6 @@
 import ASN1
 import BigInt
 
-/// The PublicKey structure
 public struct PublicKey: CustomStringConvertible, Equatable {
     
     let kem: KEM

@@ -1,5 +1,7 @@
 # ``SwiftHPKE/PrivateKey``
 
+The private key
+
 ## Overview
 
 There are five different private key types corresponding to the five KEM's
@@ -27,6 +29,6 @@ There are five different private key types corresponding to the five KEM's
 - ``init(der:)``
 - ``init(pem:)``
 
-### Methods
+### Equality
 
 - ``==(_:_:)``

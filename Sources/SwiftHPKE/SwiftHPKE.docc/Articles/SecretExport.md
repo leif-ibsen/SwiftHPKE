@@ -1,9 +1,13 @@
 # Secret Export
 
+Creating secret messages
+
 ## 
+
 Given the recipient's public key, a sender can generate a secret that only the recipient can know.
 
 ### Example 1
+
 ```swift
 import SwiftHPKE
 
@@ -29,6 +33,7 @@ Retrieved secret: [172, 169, 119, 121, 167, 53, 213, 12, 0, 29]
 ```
 
 ### Example 2
+
 ```swift
 import SwiftHPKE
 

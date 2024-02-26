@@ -7,7 +7,7 @@
 
 import CryptoKit
 
-/// AEAD encryption algorithms
+/// The AEAD encryption algorithms
 public enum AEAD: CustomStringConvertible, CaseIterable {
 
     /// Textual description of `self`

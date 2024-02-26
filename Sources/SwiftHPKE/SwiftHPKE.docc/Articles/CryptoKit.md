@@ -1,9 +1,10 @@
-# Apple CryptoKit Compatibility
+# CryptoKit Compatibility
+
+SwiftHPKE is compatible with Apple’s CryptoKit framework
 
 ## 
 
-The SwiftHPKE keys of type `.P256`, `.P384`, `.P521` and `.X25519` correspond to Apple
-CryptoKit keys of type `P256`, `P384`, `P521` and `Curve25519`. Keys of type `.X448` is not supported in CryptoKit.
+The SwiftHPKE keys of type `.P256`, `.P384`, `.P521` and `.X25519` correspond to CryptoKit keys of type `P256`, `P384`, `P521` and `Curve25519`. Keys of type `.X448` is not supported in CryptoKit.
 
 To convert CryptoKit `P256` keys (similarly for `P384` and `P521`) - say `ckPriv` and `ckPub` to SwiftHPKE keys:
 

@@ -1,5 +1,7 @@
 # Performance
 
+Encryption and decryption speed
+
 ## 
 
 SwiftHPKE's encryption and decryption performance was measured on an iMac 2021, Apple M1 chip.

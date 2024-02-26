@@ -1,5 +1,7 @@
 # ``SwiftHPKE/Recipient``
 
+The recipient
+
 ## Overview
 
 Based on its ``SwiftHPKE/CipherSuite``, a `Recipient` instance can decrypt a sequence of messages in one of four modes:

@@ -8,7 +8,7 @@
 import Foundation
 import BigInt
 
-/// Key encapsulation mechanisms
+/// The key encapsulation mechanisms
 public enum KEM: CustomStringConvertible, CaseIterable {
     
     /// Textual description of `self`
