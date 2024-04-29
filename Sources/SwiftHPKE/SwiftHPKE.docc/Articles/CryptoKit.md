@@ -33,3 +33,9 @@ To convert SwiftHPKE `.X25519` keys - say `hpkePriv` and `hpkePub` to CryptoKit 
 let ckPriv = try CryptoKit.Curve25519.KeyAgreement.PrivateKey(rawRepresentation: hpkePriv.bytes)
 let ckPub = try CryptoKit.Curve25519.KeyAgreement.PublicKey(rawRepresentation: hpkePub.bytes)
 ```
+
+Messages sealed by CryptoKit in Base mode, Preshared Key mode, Authenticated mode or Authenticated, Preshared Key mode
+can be opened by SwiftHPKE in the same mode using the SwiftHPKE version of the keys.
+
+Likewise, messages sealed by SwiftHPKE in Base mode, Preshared Key mode, Authenticated mode or Authenticated, Preshared Key mode
+can be opened by CryptoKit in the same mode using the CryptoKit version of the keys.

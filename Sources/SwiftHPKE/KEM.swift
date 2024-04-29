@@ -66,7 +66,7 @@ struct KEMStructure {
             self.bitmask = 0xff
         case .P384:
             let suite_id = Bytes("KEM".utf8) + [0x00, 0x11]
-            self.kdfStructure = KDFStructure(.KDF256, suite_id)
+            self.kdfStructure = KDFStructure(.KDF384, suite_id)
             self.Nsecret = 48
             self.Npk = CurveP384.publicKeySize
             self.Nsk = CurveP384.privateKeySize

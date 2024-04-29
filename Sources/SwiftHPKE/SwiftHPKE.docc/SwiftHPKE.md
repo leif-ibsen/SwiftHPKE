@@ -6,7 +6,7 @@ Hybrid Public Key Encryption
 
 SwiftHPKE implements the Hybrid Public Key Encryption standard as defined in [RFC 9180].
 
-The basic concepts in SwiftHPKE are CipherSuite, Sender and Recipient, represented by the ``SwiftHPKE/CipherSuite`` structure and the ``SwiftHPKE/Sender`` and ``SwiftHPKE/Recipient`` classes.
+The basic concepts in SwiftHPKE are `CipherSuite`, `Sender` and `Recipient`, represented by the ``SwiftHPKE/CipherSuite`` structure and the ``SwiftHPKE/Sender`` and ``SwiftHPKE/Recipient`` classes.
 
 A CipherSuite combines a *Key Encapsulation Mechanism* (``SwiftHPKE/KEM``), a *Key Derivation Function* (``SwiftHPKE/KDF``)
 and a *Authenticated Encryption with Associated Data* (``SwiftHPKE/AEAD``) algorithm.
@@ -48,7 +48,7 @@ giving:
 Hi, there
 ```
 
-### Statefull Multi-message API
+### Stateful Multi-message API
 
 A `Sender` is based on a specific `CipherSuite` and a `Sender` instance can encrypt (seal)
 a sequence of plaintexts in one of the four modes shown above.
@@ -108,7 +108,7 @@ To use SwiftHPKE, in your project *Package.swift* file add a dependency like
 
 ```swift
 dependencies: [
-  .package(url: "https://github.com/leif-ibsen/SwiftHPKE", from: "2.4.0"),
+  .package(url: "https://github.com/leif-ibsen/SwiftHPKE", from: "2.5.0"),
 ]
 ```
 
@@ -116,9 +116,9 @@ SwiftHPKE itself depends on the ASN1, BigInt and Digest packages
 
 ```swift
 dependencies: [
-  .package(url: "https://github.com/leif-ibsen/ASN1", from: "2.4.0"),
-  .package(url: "https://github.com/leif-ibsen/BigInt", from: "1.16.0"),
-  .package(url: "https://github.com/leif-ibsen/Digest", from: "1.3.0"),
+  .package(url: "https://github.com/leif-ibsen/ASN1", from: "2.5.0"),
+  .package(url: "https://github.com/leif-ibsen/BigInt", from: "1.17.0"),
+  .package(url: "https://github.com/leif-ibsen/Digest", from: "1.6.0"),
 ],
 ```
 

@@ -9,7 +9,10 @@ import XCTest
 @testable import SwiftHPKE
 import CryptoKit
 
+@available(macOS 14.0, *)
 final class CryptoKitTest: XCTestCase {
+
+    let msg = "Hi, there!"
 
     func testKeysP256() throws {
         let ckPrivKey = CryptoKit.P256.KeyAgreement.PrivateKey()
