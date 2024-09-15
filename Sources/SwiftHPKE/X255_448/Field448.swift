@@ -248,6 +248,10 @@ struct Field448: CustomStringConvertible {
     }
     
     func invert() -> Field448 {
+        
+        // 2^448 - 2^224 - 1 - 2 bit pattern: 223 x 1   1 x 0   222 x 1   1 x 0   1 x 1
+        // Addition chain: 1 2 3 6 9 18 19 37 74 111 222 223
+
         let x2 = self.square().mul(self)
         let x3 = x2.square().mul(self)
         let x6 = x3.square(3).mul(x3)

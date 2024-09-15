@@ -8,11 +8,19 @@
 import XCTest
 @testable import SwiftHPKE
 import CryptoKit
+import Digest
 
 @available(macOS 14.0, *)
 final class CryptoKitTest: XCTestCase {
 
     let msg = "Hi, there!"
+    
+    // HPKE uses Base64 line size = 76
+    // CryptoKit uses Base64 line size = 64
+    // Convert from SwiftECC size to CryptoKit size
+    func from76to64(_ s: String) -> String {
+        return Base64.pemEncode(Base64.pemDecode(s, "PUBLIC KEY")!, "PUBLIC KEY", 64)
+    }
 
     func testKeysP256() throws {
         let ckPrivKey = CryptoKit.P256.KeyAgreement.PrivateKey()
@@ -21,14 +29,14 @@ final class CryptoKitTest: XCTestCase {
         let ckPubKey = ckPrivKey.publicKey
         let ckPubKeyDer = Bytes(ckPubKey.derRepresentation)
         let ckPubKeyPem = ckPubKey.pemRepresentation
-        let derPrivKey = try PrivateKey(der: ckPrivKeyDer)
-        let pemPrivKey = try PrivateKey(pem: ckPrivKeyPem)
-        let derPubKey = try PublicKey(der: ckPubKeyDer)
-        let pemPubKey = try PublicKey(pem: ckPubKeyPem)
-        XCTAssertEqual(derPrivKey, pemPrivKey)
-        XCTAssertEqual(derPubKey, pemPubKey)
-        XCTAssertEqual(ckPubKeyDer, derPubKey.der)
-        XCTAssertEqual(ckPubKeyPem, pemPubKey.pem)
+        let privKeyDer = try PrivateKey(der: ckPrivKeyDer)
+        let privKeyPem = try PrivateKey(pem: ckPrivKeyPem)
+        let pubKeyDer = try PublicKey(der: ckPubKeyDer)
+        let pubKeyPem = try PublicKey(pem: ckPubKeyPem)
+        XCTAssertEqual(privKeyDer, privKeyPem)
+        XCTAssertEqual(pubKeyDer, pubKeyDer)
+        XCTAssertEqual(ckPubKeyDer, pubKeyDer.der)
+        XCTAssertEqual(ckPubKeyPem, from76to64(pubKeyPem.pem))
     }
 
     func testKeysP384() throws {
@@ -45,7 +53,7 @@ final class CryptoKitTest: XCTestCase {
         XCTAssertEqual(privKeyDer, privKeyPem)
         XCTAssertEqual(pubKeyDer, pubKeyPem)
         XCTAssertEqual(ckPubKeyDer, pubKeyDer.der)
-        XCTAssertEqual(ckPubKeyPem, pubKeyPem.pem)
+        XCTAssertEqual(ckPubKeyPem, from76to64(pubKeyPem.pem))
     }
 
     func testKeysP521() throws {
@@ -62,7 +70,7 @@ final class CryptoKitTest: XCTestCase {
         XCTAssertEqual(privKeyDer, privKeyPem)
         XCTAssertEqual(pubKeyDer, pubKeyPem)
         XCTAssertEqual(ckPubKeyDer, pubKeyDer.der)
-        XCTAssertEqual(ckPubKeyPem, pubKeyPem.pem)
+        XCTAssertEqual(ckPubKeyPem, from76to64(pubKeyPem.pem))
     }
 
 }

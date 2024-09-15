@@ -11,8 +11,6 @@ public enum HPKEException: Error, CustomStringConvertible {
     /// Textual description of `self`
     public var description: String {
         switch self {
-        case .base64:
-            return "Base64 decoding exception"
         case .asn1Structure:
             return "ASN1 structure is wrong"
         case .pemStructure:
@@ -38,9 +36,6 @@ public enum HPKEException: Error, CustomStringConvertible {
         }
     }
         
-    /// Base64 decoding exception
-    case base64
-
     /// ASN1 structure is wrong
     case asn1Structure
 

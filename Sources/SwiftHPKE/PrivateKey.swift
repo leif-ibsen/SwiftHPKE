@@ -7,6 +7,7 @@
 
 import ASN1
 import BigInt
+import Digest
 
 public struct PrivateKey: CustomStringConvertible, Equatable {
     
@@ -146,7 +147,10 @@ public struct PrivateKey: CustomStringConvertible, Equatable {
     ///   - pem: The PEM encoding of the key
     /// - Throws: An exception if the PEM encoding is wrong
     public init(pem: String) throws {
-        try self.init(der: Base64.pemDecode(pem, "PRIVATE KEY"))
+        guard let der = Base64.pemDecode(pem, "PRIVATE KEY") else {
+            throw HPKEException.pemStructure
+        }
+        try self.init(der: der)
     }
 
 

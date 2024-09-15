@@ -108,7 +108,7 @@ To use SwiftHPKE, in your project *Package.swift* file add a dependency like
 
 ```swift
 dependencies: [
-  .package(url: "https://github.com/leif-ibsen/SwiftHPKE", from: "2.5.0"),
+  .package(url: "https://github.com/leif-ibsen/SwiftHPKE", from: "2.6.0"),
 ]
 ```
 
@@ -116,9 +116,9 @@ SwiftHPKE itself depends on the ASN1, BigInt and Digest packages
 
 ```swift
 dependencies: [
-  .package(url: "https://github.com/leif-ibsen/ASN1", from: "2.5.0"),
-  .package(url: "https://github.com/leif-ibsen/BigInt", from: "1.17.0"),
-  .package(url: "https://github.com/leif-ibsen/Digest", from: "1.6.0"),
+  .package(url: "https://github.com/leif-ibsen/ASN1", from: "2.6.0"),
+  .package(url: "https://github.com/leif-ibsen/BigInt", from: "1.19.0"),
+  .package(url: "https://github.com/leif-ibsen/Digest", from: "1.8.0"),
 ],
 ```
 
@@ -140,7 +140,6 @@ for iOS the version must be at least 13, and for watchOS the version must be at 
 - ``SwiftHPKE/CipherSuite``
 - ``SwiftHPKE/PrivateKey``
 - ``SwiftHPKE/PublicKey``
-- ``SwiftHPKE/Base64``
 
 ### Type Aliases
 

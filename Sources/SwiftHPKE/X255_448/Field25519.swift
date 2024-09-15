@@ -285,28 +285,21 @@ struct Field25519: CustomStringConvertible {
     }
 
     func invert() -> Field25519 {
-        let z2 = self.square()
-        var t = z2.square(2)
-        let z9 = t.mul(self)
-        let z11 = z9.mul(z2)
-        t = z11.square()
-        let z2_5_0 = t.mul(z9)
-        t = z2_5_0.square(5)
-        let z2_10_0 = t.mul(z2_5_0)
-        t = z2_10_0.square(10)
-        let z2_20_0 = t.mul(z2_10_0)
-        t = z2_20_0.square(20)
-        t = t.mul(z2_20_0)
-        t = t.square(10)
-        let z2_50_0 = t.mul(z2_10_0)
-        t = z2_50_0.square(50)
-        let z2_100_0 = t.mul(z2_50_0)
-        t = z2_100_0.square(100)
-        t = t.mul(z2_100_0)
-        t = t.square(50)
-        t = t.mul(z2_50_0)
-        t = t.square(5)
-        return t.mul(z11)
+
+        // 2^255 - 19 - 2 bit pattern: 250 x 1   1 x 0   1 x 1   1 x 0   2 x 1
+        // Addition chain: 1 2 3 5 10 15 25 50 75 125 250
+
+        let x2 = self.square().mul(self)
+        let x3 = x2.square().mul(self)
+        let x5 = x3.square(2).mul(x2)
+        let x10 = x5.square(5).mul(x5)
+        let x15 = x10.square(5).mul(x5)
+        let x25 = x15.square(10).mul(x10)
+        let x50 = x25.square(25).mul(x25)
+        let x75 = x50.square(25).mul(x25)
+        let x125 = x75.square(50).mul(x50)
+        let x250 = x125.square(125).mul(x125)        
+        return x250.square(2).mul(self).square(3).mul(x2)
     }
 
 }
