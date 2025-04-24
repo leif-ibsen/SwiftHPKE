@@ -130,7 +130,7 @@ struct Field448: CustomStringConvertible {
         sum5.add(sum4.shiftRight56())
         sum6.add(sum5.shiftRight56())
         sum7.add(sum6.shiftRight56())
-        return Field448(Limbs([sum0.low, sum1.low, sum2.low, sum3.low, sum4.low, sum5.low, sum6.low, sum7.low]))
+        return Field448([sum0.low, sum1.low, sum2.low, sum3.low, sum4.low, sum5.low, sum6.low, sum7.low])
     }
 
     func mul(_ a: Field448) -> Field448 {
@@ -232,7 +232,7 @@ struct Field448: CustomStringConvertible {
         sum5.add(sum4.shiftRight56())
         sum6.add(sum5.shiftRight56())
         sum7.add(sum6.shiftRight56())
-        return Field448(Limbs([sum0.low, sum1.low, sum2.low, sum3.low, sum4.low, sum5.low, sum6.low, sum7.low]))
+        return Field448([sum0.low, sum1.low, sum2.low, sum3.low, sum4.low, sum5.low, sum6.low, sum7.low])
     }
 
     func square() -> Field448 {

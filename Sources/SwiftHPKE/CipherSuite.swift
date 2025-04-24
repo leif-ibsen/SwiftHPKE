@@ -325,8 +325,6 @@ public struct CipherSuite: CustomStringConvertible {
     ///   - context: The export context
     ///   - L: The length of the export secret
     ///   - authentication: The sender public key
-    ///   - psk: The preshared key
-    ///   - pskId: The preshared key id
     ///   - encap: The encapsulated key
     /// - Returns: The export secret
     /// - Throws: An exception if one of the keys does not match `self` or L is negative or too large

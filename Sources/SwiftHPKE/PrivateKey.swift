@@ -7,7 +7,7 @@
 
 import ASN1
 import BigInt
-import Digest
+import struct Digest.Base64
 
 public struct PrivateKey: CustomStringConvertible, Equatable {
     

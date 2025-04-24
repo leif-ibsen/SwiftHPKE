@@ -7,43 +7,23 @@
 
 import XCTest
 @testable import SwiftHPKE
+import struct Digest.Base64
 
 // Testcases from RFC 9180
 
 final class HPKETest: XCTestCase {
     
-    static func bytes2hex(_ x: Bytes) -> String {
-        let hexDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"]
-        var s = ""
-        for b in x {
-            s.append(hexDigits[Int(b >> 4)])
-            s.append(hexDigits[Int(b & 0xf)])
-        }
-        return s
-    }
-    
-    static func hex2bytes(_ x: String) -> Bytes {
-        let b = [Byte](x.utf8)
-        var bytes = Bytes(repeating: 0, count: b.count / 2)
-        for i in 0 ..< bytes.count {
-            let b0 = b[2 * i]
-            let b1 = b[2 * i + 1]
-            bytes[i] = ((b0 > 57 ? b0 - 97 + 10 : b0 - 48) << 4) | (b1 > 57 ? b1 - 97 + 10 : b1 - 48)
-        }
-        return bytes
-    }
-    
-    let pt = HPKETest.hex2bytes("4265617574792069732074727574682c20747275746820626561757479")
-    let info = HPKETest.hex2bytes("4f6465206f6e2061204772656369616e2055726e")
-    let aad0 = HPKETest.hex2bytes("436f756e742d30")
-    let aad1 = HPKETest.hex2bytes("436f756e742d31")
-    let aad2 = HPKETest.hex2bytes("436f756e742d32")
-    let aad4 = HPKETest.hex2bytes("436f756e742d34")
-    let aad255 = HPKETest.hex2bytes("436f756e742d323535")
-    let aad256 = HPKETest.hex2bytes("436f756e742d323536")
-    let expCtx = HPKETest.hex2bytes("54657374436f6e74657874")
-    let psk = HPKETest.hex2bytes("0247fd33b913760fa1fa51e1892d9f307fbe65eb171e8132c2af18555a738b82")
-    let psk_id = HPKETest.hex2bytes("456e6e796e20447572696e206172616e204d6f726961")
+    let pt = Base64.hex2bytes("4265617574792069732074727574682c20747275746820626561757479")!
+    let info = Base64.hex2bytes("4f6465206f6e2061204772656369616e2055726e")!
+    let aad0 = Base64.hex2bytes("436f756e742d30")!
+    let aad1 = Base64.hex2bytes("436f756e742d31")!
+    let aad2 = Base64.hex2bytes("436f756e742d32")!
+    let aad4 = Base64.hex2bytes("436f756e742d34")!
+    let aad255 = Base64.hex2bytes("436f756e742d323535")!
+    let aad256 = Base64.hex2bytes("436f756e742d323536")!
+    let expCtx = Base64.hex2bytes("54657374436f6e74657874")!
+    let psk = Base64.hex2bytes("0247fd33b913760fa1fa51e1892d9f307fbe65eb171e8132c2af18555a738b82")!
+    let psk_id = Base64.hex2bytes("456e6e796e20447572696e206172616e204d6f726961")!
 
     struct hpkeTest {
         
@@ -71,21 +51,21 @@ final class HPKETest: XCTestCase {
             self.kem = kem
             self.kdf = kdf
             self.aead = aead
-            self.ikm = HPKETest.hex2bytes(ikm)
-            self.pkR = HPKETest.hex2bytes(pkR)
-            self.skR = HPKETest.hex2bytes(skR)
-            self.pkS = HPKETest.hex2bytes(pkS)
-            self.skS = HPKETest.hex2bytes(skS)
-            self.enc = HPKETest.hex2bytes(enc)
-            self.ct0 = HPKETest.hex2bytes(ct0)
-            self.ct1 = HPKETest.hex2bytes(ct1)
-            self.ct2 = HPKETest.hex2bytes(ct2)
-            self.ct4 = HPKETest.hex2bytes(ct4)
-            self.ct255 = HPKETest.hex2bytes(ct255)
-            self.ct256 = HPKETest.hex2bytes(ct256)
-            self.exp1 = HPKETest.hex2bytes(exp1)
-            self.exp2 = HPKETest.hex2bytes(exp2)
-            self.exp3 = HPKETest.hex2bytes(exp3)
+            self.ikm = Base64.hex2bytes(ikm)!
+            self.pkR = Base64.hex2bytes(pkR)!
+            self.skR = Base64.hex2bytes(skR)!
+            self.pkS = Base64.hex2bytes(pkS)!
+            self.skS = Base64.hex2bytes(skS)!
+            self.enc = Base64.hex2bytes(enc)!
+            self.ct0 = Base64.hex2bytes(ct0)!
+            self.ct1 = Base64.hex2bytes(ct1)!
+            self.ct2 = Base64.hex2bytes(ct2)!
+            self.ct4 = Base64.hex2bytes(ct4)!
+            self.ct255 = Base64.hex2bytes(ct255)!
+            self.ct256 = Base64.hex2bytes(ct256)!
+            self.exp1 = Base64.hex2bytes(exp1)!
+            self.exp2 = Base64.hex2bytes(exp2)!
+            self.exp3 = Base64.hex2bytes(exp3)!
         }
     }
     
@@ -885,9 +865,9 @@ final class HPKETest: XCTestCase {
 
     // P384 test
 
-    let skR384 = HPKETest.hex2bytes("a00232a333024664927a9d16493f15929ede6300d4bb3655c323eee42c0b5fb9483b6e6b6593f3c6e2d7ed0f32b606c4")
-    let pkR384 = HPKETest.hex2bytes(
-        "043b738e3b529c67021a444dde81fb7a81bd0b2b4165d631da563f099ae0ae9c51ed0bddc37dc913a6adc337aa907ce103317346ee83fd7c10244ef93ed4b754a8e607bc3e9ac5ad9fb914e91a7b45e7000e6ff266fa44fe8f05893f0c66080117")
+    let skR384 = Base64.hex2bytes("a00232a333024664927a9d16493f15929ede6300d4bb3655c323eee42c0b5fb9483b6e6b6593f3c6e2d7ed0f32b606c4")!
+    let pkR384 = Base64.hex2bytes(
+        "043b738e3b529c67021a444dde81fb7a81bd0b2b4165d631da563f099ae0ae9c51ed0bddc37dc913a6adc337aa907ce103317346ee83fd7c10244ef93ed4b754a8e607bc3e9ac5ad9fb914e91a7b45e7000e6ff266fa44fe8f05893f0c66080117")!
     
     func test384() throws {
         let n = 100
@@ -929,8 +909,8 @@ final class HPKETest: XCTestCase {
     
     // X448 test
 
-    let skR448 = HPKETest.hex2bytes("3d262fddf9ec8e88495266fea19a34d28882acef045104d0d1aae121700a779c984c24f8cdd78fbff44943eba368f54b29259a4f1c600ad3")
-    let pkR448 = HPKETest.hex2bytes("078dc8e73158e3a63345f6729d0a386435b4d7ad2e033aa413985a60b443956007427dd89e81a36dc0db81752cc338824369985b4ae58c7d")
+    let skR448 = Base64.hex2bytes("3d262fddf9ec8e88495266fea19a34d28882acef045104d0d1aae121700a779c984c24f8cdd78fbff44943eba368f54b29259a4f1c600ad3")!
+    let pkR448 = Base64.hex2bytes("078dc8e73158e3a63345f6729d0a386435b4d7ad2e033aa413985a60b443956007427dd89e81a36dc0db81752cc338824369985b4ae58c7d")!
     
     func test448() throws {
         let n = 100

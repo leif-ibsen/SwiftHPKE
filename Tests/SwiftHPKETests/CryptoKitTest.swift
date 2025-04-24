@@ -8,7 +8,7 @@
 import XCTest
 @testable import SwiftHPKE
 import CryptoKit
-import Digest
+import struct Digest.Base64
 
 @available(macOS 14.0, *)
 final class CryptoKitTest: XCTestCase {

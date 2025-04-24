@@ -7,11 +7,12 @@
 
 import XCTest
 @testable import SwiftHPKE
+import struct Digest.Base64
 
 // Test vectors from project Wycheproof - x448_test.json
 final class WycheproofX448Test: XCTestCase {
 
-    static func hex2bytes(_ x: String) -> Bytes {
+    static func xhex2bytes(_ x: String) -> Bytes {
         let b = [Byte](x.utf8)
         var bytes = Bytes(repeating: 0, count: b.count / 2)
         for i in 0 ..< bytes.count {
@@ -29,9 +30,9 @@ final class WycheproofX448Test: XCTestCase {
         let shared: Bytes
         
         init(_ pubKey: String, _ privKey: String, _ shared: String) {
-            self.pubKey = hex2bytes(pubKey)
-            self.privKey = hex2bytes(privKey)
-            self.shared = hex2bytes(shared)
+            self.pubKey = Base64.hex2bytes(pubKey)!
+            self.privKey = Base64.hex2bytes(privKey)!
+            self.shared = Base64.hex2bytes(shared)!
         }
     }
 
