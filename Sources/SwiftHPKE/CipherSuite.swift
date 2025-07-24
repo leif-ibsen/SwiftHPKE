@@ -240,7 +240,7 @@ public struct CipherSuite: CustomStringConvertible {
         try self.checkExportSize(L)
         try self.checkPubKey(publicKey)
         let (sharedSecret, encap) = try self.kemStructure.encap(publicKey, [])
-        let (_, _, exporter_secret) = self.keySchedule(HPKE.BASE, sharedSecret, info, psk, pskId)
+        let (_, _, exporter_secret) = self.keySchedule(HPKE.PSK, sharedSecret, info, psk, pskId)
         return (encap, self.kdfStructure.labeledExpand(exporter_secret, Bytes("sec".utf8), context, L))
     }
 
@@ -260,7 +260,7 @@ public struct CipherSuite: CustomStringConvertible {
         try self.checkExportSize(L)
         try self.checkPrivKey(privateKey)
         let sharedSecret = try self.kemStructure.decap(encap, privateKey)
-        let (_, _, exporter_secret) = self.keySchedule(HPKE.BASE, sharedSecret, info, psk, pskId)
+        let (_, _, exporter_secret) = self.keySchedule(HPKE.PSK, sharedSecret, info, psk, pskId)
         return self.kdfStructure.labeledExpand(exporter_secret, Bytes("sec".utf8), context, L)
     }
 
@@ -313,7 +313,7 @@ public struct CipherSuite: CustomStringConvertible {
         try self.checkPubKey(publicKey)
         try self.checkPrivKey(authentication)
         let (sharedSecret, encap) = try self.kemStructure.authEncap(publicKey, authentication, [])
-        let (_, _, exporter_secret) = self.keySchedule(HPKE.BASE, sharedSecret, info, [], [])
+        let (_, _, exporter_secret) = self.keySchedule(HPKE.AUTH, sharedSecret, info, [], [])
         return (encap, self.kdfStructure.labeledExpand(exporter_secret, Bytes("sec".utf8), context, L))
     }
 
@@ -333,7 +333,7 @@ public struct CipherSuite: CustomStringConvertible {
         try self.checkPrivKey(privateKey)
         try self.checkPubKey(authentication)
         let sharedSecret = try self.kemStructure.authDecap(encap, privateKey, authentication)
-        let (_, _, exporter_secret) = self.keySchedule(HPKE.BASE, sharedSecret, info, [], [])
+        let (_, _, exporter_secret) = self.keySchedule(HPKE.AUTH, sharedSecret, info, [], [])
         return self.kdfStructure.labeledExpand(exporter_secret, Bytes("sec".utf8), context, L)
     }
 
@@ -392,7 +392,7 @@ public struct CipherSuite: CustomStringConvertible {
         try self.checkPubKey(publicKey)
         try self.checkPrivKey(authentication)
         let (sharedSecret, encap) = try self.kemStructure.authEncap(publicKey, authentication, [])
-        let (_, _, exporter_secret) = self.keySchedule(HPKE.BASE, sharedSecret, info, psk, pskId)
+        let (_, _, exporter_secret) = self.keySchedule(HPKE.AUTH_PSK, sharedSecret, info, psk, pskId)
         return (encap, self.kdfStructure.labeledExpand(exporter_secret, Bytes("sec".utf8), context, L))
     }
 
@@ -414,7 +414,7 @@ public struct CipherSuite: CustomStringConvertible {
         try self.checkPrivKey(privateKey)
         try self.checkPubKey(authentication)
         let sharedSecret = try self.kemStructure.authDecap(encap, privateKey, authentication)
-        let (_, _, exporter_secret) = self.keySchedule(HPKE.BASE, sharedSecret, info, psk, pskId)
+        let (_, _, exporter_secret) = self.keySchedule(HPKE.AUTH_PSK, sharedSecret, info, psk, pskId)
         return self.kdfStructure.labeledExpand(exporter_secret, Bytes("sec".utf8), context, L)
     }
 
